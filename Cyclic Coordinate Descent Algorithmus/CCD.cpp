@@ -33,42 +33,39 @@ bool CCD::apply(const int maxIter, const float eps)
 	// Check if skeleton is set
 	if (m_skeleton == nullptr) return false;
 	
-	// Iterate till maxIter
+	// Iterate until maxIter is reached
 	for (int i = 0; i < maxIter; i++)
 	{
-		// Find Pivot-Element of the Skeleton
+		// Find Last-Element in Skeleton
 		SkeletonNode* node = m_skeleton->getRoot();
 		while (node->getChild() != nullptr)
 		{
 			node = node->getChild();
 		}
-		
+
 		// Do for each node of the skeleton
-		Vector2D basePos = m_skeleton->getPosition();
-		
 		while (node != nullptr)
 		{
-			// Calculate current Pivot Position
+			// Calculating Vectors
 			Vector2D pivotPos = m_skeleton->getPivotPosition();
-
-			// Vector Pivot-Target
-			Vector2D basePivotVec = pivotPos - basePos;
-
-			// Vector Base-Target
-			Vector2D baseTargetVec = m_targetPos - basePos;
+			Vector2D currrentBasePos = m_skeleton->getNodeBasePosition(node);
+			Vector2D basePivotVec = (pivotPos - currrentBasePos).normalize();
+			Vector2D baseTargetVec = (m_targetPos - currrentBasePos).normalize();
 
 			// Angle between BasePivotVec and BaseTargetVec
-			float rotateAngle = basePivotVec * baseTargetVec;
-
+			float rotateAngle = acos(basePivotVec.dot(baseTargetVec)) * 180.0f / M_PI;
+			if (basePivotVec.cross(baseTargetVec) < 0.0f) rotateAngle *=  -1.0f;
+	
 			// Rotate Bone in direction of the Pivot
 			node->setAngle(node->getAngle() + rotateAngle);
 
-			// Set node and base to next child
-			basePos += Vector2D::makeVector(node->getLength(), node->getAngle());
+			// Set node to its parent
 			node = node->getParent();
 		}
 		// If Pivot is near enought to the Target return true
 		if ((m_targetPos - m_skeleton->getPivotPosition()).length() < eps) return true;
+
+		//m_skeleton->print();
 	}
 	// If the max Interations are reached without the Pivot being near enough the Target return false
 	return false;

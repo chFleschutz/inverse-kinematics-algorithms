@@ -17,6 +17,22 @@ Skeleton::~Skeleton() {
 	if (m_root)	delete m_root;
 }
 
+Vector2D& Skeleton::getNodeBasePosition(SkeletonNode* node)
+{
+	SkeletonNode* currentNode = m_root;
+	Vector2D position = m_position;
+	float angle = 0.0f;
+	while (currentNode != node)
+	{
+		if (currentNode == nullptr) break;
+
+		angle += currentNode->getAngle();
+		position += Vector2D::makeVector(currentNode->getLength(), angle);
+		currentNode = currentNode->getChild();
+	}
+	return position;
+}
+
 SkeletonNode* Skeleton::getJoint(int index) {
 	int idx = 0;
 	return m_root->getJoint(idx, index);

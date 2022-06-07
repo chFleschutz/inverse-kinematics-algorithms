@@ -1,5 +1,6 @@
 #pragma once
 #define _USE_MATH_DEFINES
+
 #include <math.h>
 #include <iostream>
 #include <iomanip>
@@ -12,24 +13,32 @@ public:
 	inline float x() { return m_x; }
 	inline float y() { return m_y; }
 
-	float norm();
+	// Gives the Vector the length 1 
+	Vector2D& normalize();
+
+	// Prints the Vector to Console in form: ( x, y )
 	void print();
 
 	// Creates a Vector with the length and rotation provided
 	static Vector2D makeVector(float length, float rotation);
+
+	// Dot-Product
+	float dot(Vector2D& vector);
+
+	// Cross-Product
+	float cross(Vector2D& vector);
+
 	// Returns the Length of the Vector
 	float length();
 
-	// Adds two Vectors together
 	Vector2D operator+(Vector2D& other);
 	Vector2D operator+(Vector2D other);
-
-	// Subtracts other from this vector
 	Vector2D operator-(Vector2D& other);
-	// Adds other to this Vector
 	Vector2D& operator+=(Vector2D other);
-	// Vector Dot-Product
-	float operator*(Vector2D& other);
+	Vector2D& operator-=(Vector2D other);
+	Vector2D operator/(float other);
+
+
 	// Prints the Vector in Form: ( x, y )
 	friend std::ostream& operator<<(std::ostream& os, Vector2D& other);
 

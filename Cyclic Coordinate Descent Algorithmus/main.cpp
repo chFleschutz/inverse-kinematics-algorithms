@@ -3,7 +3,30 @@
 
 using namespace std;
 
+Skeleton* setupArmature();
+void printResults(Skeleton* arm, Vector2D& target);
+
 int main() 
+{
+	// Setup Armature
+	Skeleton* arm = setupArmature();
+
+	// Target Location
+	Vector2D target = Vector2D(1.0f, 1.0f);
+	cout << "Targetlocation: " << target << endl << endl;
+
+	// Apply the CCD algorithm
+	cout << "<< Running CCD >>" << endl;
+	CCD algo = CCD(arm, target);
+	// Check if pivot is within the deviation from the target
+	if (algo.apply(10, 0.01)) cout << "CCD successful" << endl << endl;
+	else cout << "CCD failure" << endl << endl;
+	
+	// Print Results
+	printResults(arm, target);
+}
+
+Skeleton* setupArmature()
 {
 	// Setup Armature
 	cout << "<< Input Values >>" << endl;
@@ -14,24 +37,18 @@ int main()
 	node1->addChild(node2);
 	cout << "Skeleton: " << endl;
 	arm->print();
-	// Target Location
-	Vector2D target = Vector2D(1.0f, 1.0f);
-	cout << "Targetlocation: " << target << endl;
-	// Current Pivot Position
 	Vector2D pivot = arm->getPivotPosition();
-	cout << "Pivotposition: " << pivot << endl << endl;
+	cout << "Pivotposition:  " << pivot << endl;
+	return arm;
+}
 
-	// apply the CCD algorithm
-	cout << "<< Running CCD >>" << endl;
-	CCD algo = CCD(arm, target);
-	if (algo.apply(10, 0.01)) cout << "CCD succes" << endl << endl;
-	else cout << "CCD failure" << endl << endl;
-	
+void printResults(Skeleton* arm, Vector2D& target)
+{
 	// Print Result
 	cout << "<< Result Values >>" << endl;
 	cout << "Skeleton: " << endl;
 	arm->print();
-	pivot = arm->getPivotPosition();
-	cout << "Pivotposition: " << pivot << endl << endl;
-
+	Vector2D pivot = arm->getPivotPosition();
+	cout << "Pivotposition: " << pivot << endl;
+	cout << "Targetdeviation: " << (target - pivot).length() << endl;
 }
