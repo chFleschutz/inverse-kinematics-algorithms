@@ -10,10 +10,6 @@ public:
 	CCD(Skeleton* skeleton, Vector2D target = Vector2D(0.0f, 0.0f));
 	
 	Skeleton* getSkeleton();
-	template <int boneCount>
-	inline void setBoneChain(const float(&angle)[boneCount]);
-
-	void getPivotPositions(int count, Vector2D*& pivot);
 
 	void setTargetPosition(float tx, float ty);
 
@@ -25,22 +21,4 @@ public:
 private:
 	Skeleton* m_skeleton;
 	Vector2D m_targetPos;
-	int m_numBones;
 };
-
-template <int boneCount>
-inline void CCD::setBoneChain(const float(&angle)[boneCount]) {
-	if (boneCount < 1) return;
-
-	m_numBones = boneCount;
-	SkeletonNode* node = new SkeletonNode();
-	node->setAngle(angle[0]);
-	m_skeleton->setRoot(node);
-
-	for (int i = 1; i < boneCount; i++) {
-		SkeletonNode* parent = node;
-		node = new SkeletonNode();
-		node->setAngle(angle[i]);
-		parent->addChild(node);
-	}
-}

@@ -3,24 +3,18 @@
 CCD::CCD()
 {
 	m_skeleton = nullptr;
-	m_numBones = 0;
 	m_targetPos = Vector2D(0.0f, 0.0f);
 }
 
 CCD::CCD(Skeleton* skeleton, Vector2D target)
 {
 	m_skeleton = skeleton;
-	m_numBones = m_skeleton->getNumOfNodes();
 	m_targetPos = target;
 }
 
 Skeleton* CCD::getSkeleton()
 {
 	return m_skeleton;
-}
-
-void CCD::getPivotPositions(int count, Vector2D*& pivot)
-{
 }
 
 void CCD::setTargetPosition(float tx, float ty)

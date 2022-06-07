@@ -33,11 +33,6 @@ Vector2D& Skeleton::getNodeBasePosition(SkeletonNode* node)
 	return position;
 }
 
-SkeletonNode* Skeleton::getJoint(int index) {
-	int idx = 0;
-	return m_root->getJoint(idx, index);
-}
-
 // Calculates the Pivot Position by iterating trought Nodes and adding their lengths 
 Vector2D& Skeleton::getPivotPosition()
 {
@@ -55,18 +50,6 @@ Vector2D& Skeleton::getPivotPosition()
 		currentNode = currentNode->getChild();
 	} 
 	return pivotPos;
-}
-
-int Skeleton::getNumOfNodes()
-{
-	int boneCount = 0;
-	SkeletonNode* node = m_root;
-	while (node != nullptr)
-	{
-		boneCount++;
-		node = node->getChild();
-	}
-	return boneCount;
 }
 
 void Skeleton::print() {

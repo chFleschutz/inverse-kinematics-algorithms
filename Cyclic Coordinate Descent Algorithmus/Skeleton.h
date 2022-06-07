@@ -13,12 +13,11 @@ public:
 
 	inline Vector2D getPosition() { return m_position; }
 
+	// Returns the Position of the Base of node
 	Vector2D& getNodeBasePosition(SkeletonNode* node);
 
-	SkeletonNode* getJoint(int index);
+	// Returns the Pivot-Position of the last node
 	Vector2D& getPivotPosition();
-
-	int getNumOfNodes();
 	
 	void print();
 

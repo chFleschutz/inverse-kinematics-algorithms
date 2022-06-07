@@ -11,8 +11,6 @@ public:
 	inline SkeletonNode* getChild() { return m_child; }
 	inline SkeletonNode* getParent() { return m_parent; }
 
-	SkeletonNode* getJoint(int& index, const int searchIndex);
-
 	inline void setLength(float length) { m_length = length; }
 	inline float getLength() { return m_length; }
 

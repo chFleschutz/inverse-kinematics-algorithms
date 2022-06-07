@@ -28,31 +28,6 @@ void SkeletonNode::addChild(SkeletonNode* child) {
 	}
 }
 
-SkeletonNode* SkeletonNode::getJoint(int& index, const int searchIndex) {
-	if (index == searchIndex) 
-	{
-		return this;
-	}
-	else 
-	{
-		if (m_child == nullptr) 
-		{
-			return nullptr;
-		} 
-		else 
-		{
-			SkeletonNode* searchNode = nullptr;
-			index += 1;
-			searchNode = m_child->getJoint(index, searchIndex);
-			if (searchNode != nullptr)
-			{
-				return searchNode;
-			}
-		}
-	}
-	return nullptr;
-}
-
 void SkeletonNode::print(int einruecktiefe) {
 	for (int i = 0; i < einruecktiefe; i++)
 	{
