@@ -26,16 +26,18 @@ bool CCD::apply(const int maxIter, const float eps)
 {
 	// Check if skeleton is set
 	if (m_skeleton == nullptr) return false;
+
+	// Find Last-Element in Skeleton
+	SkeletonNode* lastNode = m_skeleton->getRoot();
+	while (lastNode->getChild() != nullptr)
+	{
+		lastNode = lastNode->getChild();
+	}
 	
 	// Iterate until maxIter is reached
 	for (int i = 0; i < maxIter; i++)
 	{
-		// Find Last-Element in Skeleton
-		SkeletonNode* node = m_skeleton->getRoot();
-		while (node->getChild() != nullptr)
-		{
-			node = node->getChild();
-		}
+		SkeletonNode* node = lastNode;
 
 		// Do for each node of the skeleton
 		while (node != nullptr)

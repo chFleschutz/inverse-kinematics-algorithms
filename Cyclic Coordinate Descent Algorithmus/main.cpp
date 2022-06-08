@@ -33,8 +33,10 @@ Skeleton* setupArmature()
 	Skeleton* arm = new Skeleton();
 	SkeletonNode* node1 = new SkeletonNode(1.0f, 30.0f);
 	SkeletonNode* node2 = new SkeletonNode(1.0f, 30.0f);
+	//SkeletonNode* node3 = new SkeletonNode(1.0f, 30.0f);
 	arm->setRoot(node1);
 	node1->addChild(node2);
+	//node2->addChild(node3);
 	cout << "Skeleton: " << endl;
 	arm->print();
 	Vector2D pivot = arm->getPivotPosition();
@@ -49,6 +51,7 @@ void printResults(Skeleton* arm, Vector2D& target)
 	cout << "Skeleton: " << endl;
 	arm->print();
 	Vector2D pivot = arm->getPivotPosition();
-	cout << "Pivotposition: " << pivot << endl;
+	cout << "Pivotposition:   " << pivot << endl;
+	cout << "Targetposition:  " << target << endl;
 	cout << "Targetdeviation: " << (target - pivot).length() << endl;
 }

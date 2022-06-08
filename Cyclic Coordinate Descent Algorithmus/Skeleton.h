@@ -11,6 +11,7 @@ public:
 	inline void setRoot(SkeletonNode* root) { m_root = root; }
 	inline SkeletonNode* getRoot() { return m_root; }
 
+	// Returns the Position of the Skeleten 
 	inline Vector2D getPosition() { return m_position; }
 
 	// Returns the Position of the Base of node
