@@ -24,6 +24,8 @@ int main()
 	
 	// Print Results
 	printResults(arm, target);
+
+	delete arm;
 }
 
 Skeleton* setupArmature()
