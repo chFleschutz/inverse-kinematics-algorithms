@@ -15,21 +15,7 @@ Skeleton::Skeleton(Vector2D position)
 
 Skeleton::~Skeleton() 
 {
-	// Delete all Nodes in the Skeleton
-	if (m_root != nullptr) 
-	{
-		SkeletonNode* node = m_root;
-		while (node->getChild() != nullptr)
-		{
-			node = node->getChild();
-		}
-		while (node != nullptr)
-		{
-			SkeletonNode* temp = node;
-			node = node->getParent();
-			delete temp;
-		}
-	}
+	if (m_root)	delete m_root;
 }
 
 Vector2D& Skeleton::getNodeBasePosition(SkeletonNode* node)
