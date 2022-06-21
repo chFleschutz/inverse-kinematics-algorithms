@@ -5,6 +5,8 @@ using namespace std;
 
 Skeleton* setupArmature();
 void printResults(Skeleton* arm, Vector2D& target);
+void runCCD(Skeleton* armature, Vector2D& target);
+void runFABRIK(Skeleton* armature, Vector2D& target);
 
 int main() 
 {
@@ -15,13 +17,10 @@ int main()
 	Vector2D target = Vector2D(1.0f, 1.0f);
 	cout << "Targetlocation: " << target << endl << endl;
 
-	// Apply the CCD algorithm
-	cout << "<< Running CCD >>" << endl;
-	CCD algo = CCD(arm, target);
-	// Check if pivot is within the deviation from the target
-	if (algo.applyCCD(10, 0.01)) cout << "CCD successful" << endl << endl;
-	else cout << "CCD failure" << endl << endl;
-	
+	// Inverse Kinematik
+	runCCD(arm, target);
+	//runFABRIK(arm, target);
+
 	// Print Results
 	printResults(arm, target);
 
@@ -56,4 +55,18 @@ void printResults(Skeleton* arm, Vector2D& target)
 	cout << "Pivotposition:   " << pivot << endl;
 	cout << "Targetposition:  " << target << endl;
 	cout << "Targetdeviation: " << (target - pivot).length() << endl;
+}
+
+void runCCD(Skeleton* armature, Vector2D& target)
+{
+	// Apply the CCD algorithm
+	cout << "<< Running CCD >>" << endl;
+	CCD algo = CCD(armature, target);
+	// Check if pivot is within the deviation from the target
+	if (algo.applyCCD(10, 0.01)) cout << "CCD successful" << endl << endl;
+	else cout << "CCD failure" << endl << endl;
+}
+
+void runFABRIK(Skeleton* armature, Vector2D& target)
+{
 }
