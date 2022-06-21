@@ -31,7 +31,6 @@ public:
 	// Returns the Length of the Vector
 	float length();
 
-	//Vector2D operator+(Vector2D& other);
 	Vector2D operator+(Vector2D other);
 	Vector2D operator-(Vector2D& other);
 	Vector2D& operator+=(Vector2D other);

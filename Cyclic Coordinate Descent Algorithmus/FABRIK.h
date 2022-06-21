@@ -8,7 +8,7 @@ class FABRIK
 public:
 	FABRIK(Skeleton* skeleton, Vector2D target);
 
-	bool apply();
+	bool apply(int maxIter, float eps);
 
 private:
 	Skeleton* m_skeleton;

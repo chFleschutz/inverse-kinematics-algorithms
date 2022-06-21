@@ -1,5 +1,6 @@
 #include <iostream>
 #include "CCD.h"
+#include "FABRIK.h"
 
 using namespace std;
 
@@ -69,4 +70,9 @@ void runCCD(Skeleton* armature, Vector2D& target)
 
 void runFABRIK(Skeleton* armature, Vector2D& target)
 {
+	// Apply the FABRIK algorithm
+	cout << "<< Running FABRIK >>" << endl;
+	FABRIK algo = FABRIK(armature, target);
+	if (algo.apply(10, 0.1)) cout << "FABRIK succesful" << endl << endl;
+	else cout << "FABRIK failure" << endl << endl;
 }

@@ -29,13 +29,18 @@ void SkeletonNode::addChild(SkeletonNode* child) {
 }
 
 void SkeletonNode::print(int einruecktiefe) {
-	for (int i = 0; i < einruecktiefe; i++)
-	{
-		std::cout << " ";
-	}
-	std::cout << "angle = " << m_angle << std::endl;
+	for (int i = 0; i < einruecktiefe; i++) std::cout << " ";
+	std::cout << "angle  = " << m_angle << std::endl;
+
+	for (int i = 0; i < einruecktiefe; i++) std::cout << " ";
+	std::cout << "length = " << m_length << std::endl;
+
 	if (m_child)
 	{
 		m_child->print(einruecktiefe + 4);
+	}
+	else 
+	{
+		std::cout << std::endl;
 	}
 }

@@ -45,11 +45,6 @@ float Vector2D::length()
 }
 
 // Vector Addition (x1 + x2, y1 + y2)
-Vector2D Vector2D::operator+(Vector2D& other)
-{
-	return Vector2D(m_x + other.x(), m_y + other.y());
-}
-
 Vector2D Vector2D::operator+(Vector2D other)
 {
 	return Vector2D(m_x + other.x(), m_y + other.y());

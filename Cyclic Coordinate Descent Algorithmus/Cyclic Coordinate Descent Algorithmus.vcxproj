@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CCD.cpp" />
+    <ClCompile Include="FABRIK.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Skeleton.cpp" />
     <ClCompile Include="SkeletonNode.cpp" />
@@ -147,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CCD.h" />
+    <ClInclude Include="FABRIK.h" />
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="SkeletonNode.h" />
     <ClInclude Include="Vector2D.h" />
