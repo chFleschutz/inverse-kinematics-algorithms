@@ -63,6 +63,18 @@ Vector2D& Skeleton::getPivotPosition()
 	return pivotPos;
 }
 
+int Skeleton::getNumOfBones()
+{
+	SkeletonNode* node = m_root;
+	int boneCount = 0;
+	while (node != nullptr)
+	{
+		node = node->getChild();
+		boneCount++;
+	}
+	return boneCount;
+}
+
 void Skeleton::print() {
 	if (m_root) m_root->print(0);
 }

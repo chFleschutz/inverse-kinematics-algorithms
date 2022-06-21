@@ -81,6 +81,11 @@ Vector2D Vector2D::operator/(float other)
 	return Vector2D(m_x / other, m_y / other);
 }
 
+Vector2D Vector2D::operator*(float other)
+{
+	return Vector2D(m_x * other, m_y * other);
+}
+
 std::ostream& operator<<(std::ostream& os, Vector2D& other)
 {
 	return os << std::fixed << std::setprecision(3) << "( " << other.x() << ", " << other.y() << " )";

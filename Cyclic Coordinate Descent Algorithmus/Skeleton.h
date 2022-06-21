@@ -20,6 +20,8 @@ public:
 
 	// Returns the Pivot-Position of the last node
 	Vector2D& getPivotPosition();
+
+	int getNumOfBones();
 	
 	void print();
 

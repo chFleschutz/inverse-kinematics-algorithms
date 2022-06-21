@@ -1,4 +1,5 @@
 #pragma once
+#include <math.h>
 #include "Skeleton.h"
 #include "Vector2D.h"
 

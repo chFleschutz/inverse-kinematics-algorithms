@@ -18,8 +18,8 @@ int main()
 	cout << "Targetlocation: " << target << endl << endl;
 
 	// Inverse Kinematik
-	runCCD(arm, target);
-	//runFABRIK(arm, target);
+	//runCCD(arm, target);
+	runFABRIK(arm, target);
 
 	// Print Results
 	printResults(arm, target);

@@ -31,12 +31,13 @@ public:
 	// Returns the Length of the Vector
 	float length();
 
-	Vector2D operator+(Vector2D& other);
+	//Vector2D operator+(Vector2D& other);
 	Vector2D operator+(Vector2D other);
 	Vector2D operator-(Vector2D& other);
 	Vector2D& operator+=(Vector2D other);
 	Vector2D& operator-=(Vector2D other);
 	Vector2D operator/(float other);
+	Vector2D operator*(float other);
 
 
 	// Prints the Vector in Form: ( x, y )
