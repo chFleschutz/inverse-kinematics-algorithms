@@ -18,6 +18,16 @@ Skeleton::~Skeleton()
 	if (m_root)	delete m_root;
 }
 
+SkeletonNode* Skeleton::getPivot()
+{
+	SkeletonNode* node = m_root;
+	while (node->getChild() != nullptr)
+	{
+		node = node->getChild();
+	}
+	return node;
+}
+
 Vector2D& Skeleton::getNodeBasePosition(SkeletonNode* node)
 {
 	SkeletonNode* currentNode = m_root;

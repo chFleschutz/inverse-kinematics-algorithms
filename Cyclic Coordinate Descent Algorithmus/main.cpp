@@ -19,7 +19,7 @@ int main()
 	cout << "<< Running CCD >>" << endl;
 	CCD algo = CCD(arm, target);
 	// Check if pivot is within the deviation from the target
-	if (algo.apply(10, 0.01)) cout << "CCD successful" << endl << endl;
+	if (algo.applyCCD(10, 0.01)) cout << "CCD successful" << endl << endl;
 	else cout << "CCD failure" << endl << endl;
 	
 	// Print Results
@@ -33,12 +33,12 @@ Skeleton* setupArmature()
 	// Setup Armature
 	cout << "<< Input Values >>" << endl;
 	Skeleton* arm = new Skeleton();
-	SkeletonNode* node1 = new SkeletonNode(1.0f, 30.0f);
+	SkeletonNode* node1 = new SkeletonNode(1.5f, 30.0f);
 	SkeletonNode* node2 = new SkeletonNode(1.0f, 30.0f);
-	//SkeletonNode* node3 = new SkeletonNode(1.0f, 30.0f);
+	SkeletonNode* node3 = new SkeletonNode(1.0f, 30.0f);
 	arm->setRoot(node1);
 	node1->addChild(node2);
-	//node2->addChild(node3);
+	node2->addChild(node3);
 	cout << "Skeleton: " << endl;
 	arm->print();
 	Vector2D pivot = arm->getPivotPosition();

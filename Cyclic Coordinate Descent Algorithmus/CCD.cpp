@@ -22,7 +22,7 @@ void CCD::setTargetPosition(float tx, float ty)
 	m_targetPos = Vector2D(tx, ty);
 }
 
-bool CCD::apply(const int maxIter, const float eps)
+bool CCD::applyCCD(const int maxIter, const float eps)
 {
 	// Check if skeleton is set
 	if (m_skeleton == nullptr) return false;
@@ -66,3 +66,5 @@ bool CCD::apply(const int maxIter, const float eps)
 	// If the max Interations are reached without the Pivot being near enough the Target return false
 	return false;
 }
+
+
