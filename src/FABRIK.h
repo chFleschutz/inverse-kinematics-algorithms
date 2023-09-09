@@ -1,5 +1,5 @@
 #pragma once
-#include <math.h>
+
 #include "Skeleton.h"
 #include "Vector2D.h"
 
@@ -16,10 +16,10 @@ public:
 	void setTargetPosition(const Vector2D& targetPos) { m_targetPos = targetPos; }
 
 	/// @brief Trys to set the end effector of the skeleton to the target position by rotating the bones of the skeleton
-	/// @param maxIter Max iterations of the algorithm
-	/// @param eps Max deviation from the target position
-	/// @return Returns true if the end effector is within eps from the target before max Iterations are reached else returns false
-	bool apply(int maxIter, float eps);
+	/// @param maxItererations Max iterations of the algorithm
+	/// @param epsilon Max deviation from the target position
+	/// @return Returns true if the end effector is within epsilon from the target before max Iterations are reached else returns false
+	bool apply(int maxItererations, float epsilon);
 
 private:
 	Skeleton* m_skeleton;

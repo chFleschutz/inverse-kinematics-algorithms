@@ -1,13 +1,15 @@
-#include <iostream>
 #include "CCD.h"
 #include "FABRIK.h"
 
-using namespace std;
+#include <iostream>
+
+/// Demo for ik algorithms
+void runCCD(Skeleton& armature, Vector2D& target);
+void runFABRIK(Skeleton& armature, Vector2D& target);
 
 void setupSkeleton(Skeleton& skeleton);
 void printResults(Skeleton& arm, Vector2D& target);
-void runCCD(Skeleton& armature, Vector2D& target);
-void runFABRIK(Skeleton& armature, Vector2D& target);
+
 
 int main()
 {
@@ -17,7 +19,7 @@ int main()
 
 	// Target Location
 	Vector2D target = Vector2D(1.0f, 1.0f);
-	cout << "Targetlocation: " << target << endl << endl;
+	std::cout << "Targetlocation: " << target << std::endl << std::endl;
 
 	// Inverse Kinematik
 	//runCCD(arm, target);
@@ -27,50 +29,50 @@ int main()
 	printResults(arm, target);
 }
 
+void runCCD(Skeleton& skeleton, Vector2D& target)
+{
+	// Apply the CCD algorithm
+	std::cout << "<< Running CCD >>" << std::endl;
+	CCD ccd_solver = CCD(&skeleton, target);
+	if (ccd_solver.apply(10, 0.01f))
+		std::cout << "CCD successful" << std::endl << std::endl;
+	else
+		std::cout << "CCD failure" << std::endl << std::endl;
+}
+
+void runFABRIK(Skeleton& skeleton, Vector2D& target)
+{
+	// Apply the FABRIK algorithm
+	std::cout << "<< Running FABRIK >>" << std::endl;
+	FABRIK fabrik_solver = FABRIK(&skeleton, target);
+	if (fabrik_solver.apply(10, 0.1f))
+		std::cout << "FABRIK succesful" << std::endl << std::endl;
+	else
+		std::cout << "FABRIK failure" << std::endl << std::endl;
+}
+
 void setupSkeleton(Skeleton& skeleton)
 {
-	cout << "<< Input Values >>" << endl;
+	std::cout << "<< Input Values >>" << std::endl;
 	Bone* node1 = new Bone(1.5f, 30.0f);
 	Bone* node2 = new Bone(1.0f, 30.0f);
 	Bone* node3 = new Bone(1.0f, 30.0f);
 	skeleton.setRootBone(node1);
 	node1->addChild(node2);
 	node2->addChild(node3);
-	cout << "Skeleton: " << endl;
+	std::cout << "Skeleton: " << std::endl;
 	skeleton.print();
-	Vector2D pivot = skeleton.getPivotPosition();
-	cout << "Pivotposition:  " << pivot << endl;
+	Vector2D pivot = skeleton.pivotPosition();
+	std::cout << "Pivotposition:  " << pivot << std::endl;
 }
 
 void printResults(Skeleton& skeleton, Vector2D& target)
 {
-	cout << "<< Result Values >>" << endl;
-	cout << "Skeleton: " << endl;
+	std::cout << "<< Result Values >>" << std::endl;
+	std::cout << "Skeleton: " << std::endl;
 	skeleton.print();
-	Vector2D pivot = skeleton.getPivotPosition();
-	cout << "Pivotposition:   " << pivot << endl;
-	cout << "Targetposition:  " << target << endl;
-	cout << "Targetdeviation: " << (target - pivot).length() << endl;
-}
-
-void runCCD(Skeleton& skeleton, Vector2D& target)
-{
-	// Apply the CCD algorithm
-	cout << "<< Running CCD >>" << endl;
-	CCD ccd_solver = CCD(&skeleton, target);
-	if (ccd_solver.apply(10, 0.01))
-		cout << "CCD successful" << endl << endl;
-	else
-		cout << "CCD failure" << endl << endl;
-}
-
-void runFABRIK(Skeleton& skeleton, Vector2D& target)
-{
-	// Apply the FABRIK algorithm
-	cout << "<< Running FABRIK >>" << endl;
-	FABRIK fabrik_solver = FABRIK(&skeleton, target);
-	if (fabrik_solver.apply(10, 0.1))
-		cout << "FABRIK succesful" << endl << endl;
-	else
-		cout << "FABRIK failure" << endl << endl;
+	Vector2D pivot = skeleton.pivotPosition();
+	std::cout << "Pivotposition:   " << pivot << std::endl;
+	std::cout << "Targetposition:  " << target << std::endl;
+	std::cout << "Targetdeviation: " << (target - pivot).length() << std::endl;
 }

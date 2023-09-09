@@ -22,14 +22,14 @@ Skeleton::~Skeleton()
 Bone* Skeleton::pivotBone()
 {
 	Bone* node = m_root;
-	while (node->getChild() != nullptr)
+	while (node->child() != nullptr)
 	{
-		node = node->getChild();
+		node = node->child();
 	}
 	return node;
 }
 
-Vector2D& Skeleton::boneBasePosition(Bone* node)
+Vector2D Skeleton::boneBasePosition(Bone* node)
 {
 	Bone* currentNode = m_root;
 	Vector2D position = m_position;
@@ -38,39 +38,42 @@ Vector2D& Skeleton::boneBasePosition(Bone* node)
 	{
 		if (currentNode == nullptr) break;
 
-		angle += currentNode->getAngle();
-		position += Vector2D::makeVector(currentNode->getLength(), angle);
-		currentNode = currentNode->getChild();
+		angle += currentNode->angle();
+		position += Vector2D::makeVector(currentNode->length(), angle);
+		currentNode = currentNode->child();
 	}
 	return position;
 }
 
 // Calculates the Pivot Position by iterating trought Nodes and adding their lengths 
-Vector2D& Skeleton::getPivotPosition()
+Vector2D Skeleton::pivotPosition()
 {
 	if (m_root == nullptr) return m_position;
 
-	Bone* currentNode = m_root;
+	Bone* currentBone = m_root;
 	Vector2D pivotPos = m_position;
 	float currentAngle = 0.0f;
 
 	// Iterate through all Nodes
-	while (currentNode != nullptr)
+	while (currentBone != nullptr)
 	{
-		currentAngle += currentNode->getAngle();
-		pivotPos += Vector2D(currentNode->getLength() * cos(currentAngle * M_PI / 180), currentNode->getLength() * sin(currentAngle * M_PI / 180));
-		currentNode = currentNode->getChild();
+		currentAngle += currentBone->angle();
+		//float x = currentBone->length() * cos(currentAngle * static_cast<float>(M_PI) / 180.f);
+		//float y = currentBone->length() * sin(currentAngle * static_cast<float>(M_PI) / 180.f);
+		//pivotPos += Vector2D(x, y);
+		pivotPos += Vector2D::makeVector(currentBone->length(), currentAngle);
+		currentBone = currentBone->child();
 	}
 	return pivotPos;
 }
 
-int Skeleton::getNumOfBones()
+int Skeleton::numOfBones()
 {
 	Bone* node = m_root;
 	int boneCount = 0;
 	while (node != nullptr)
 	{
-		node = node->getChild();
+		node = node->child();
 		boneCount++;
 	}
 	return boneCount;

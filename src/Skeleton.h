@@ -25,13 +25,13 @@ public:
 	Vector2D rootPosition() { return m_position; }
 
 	/// @brief Returns the position at the base of bone
-	Vector2D& boneBasePosition(Bone* bone);
+	Vector2D boneBasePosition(Bone* bone);
 
 	/// @brief Returns the pivot position of the last bone
-	Vector2D& getPivotPosition();
+	Vector2D pivotPosition();
 
 	/// @brief Returns the count of bones
-	int getNumOfBones();
+	int numOfBones();
 
 	/// @brief Prints each bone of the skeleton with its angle and length to the console
 	void print();

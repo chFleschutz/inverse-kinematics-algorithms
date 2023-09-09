@@ -5,7 +5,6 @@
 
 class CCD
 {
-
 public:
 	/// @brief Creates a solver for the Cyclic Coordinated Descend (CCD) algorithm
 	/// @param skeleton Pointer to the skeleton which should be solved
@@ -17,10 +16,10 @@ public:
 	void setTargetPosition(const Vector2D& targetPos) { m_targetPos = targetPos; }
 
 	/// @brief Trys to set the end effector of the skeleton to the target position by rotating the bones of the skeleton
-	/// @param maxIter Max iterations of the algorithm
-	/// @param eps Max deviation from the target position
-	/// @return Returns true if the end effector is within eps from the target before max Iterations are reached else returns false
-	bool apply(const int maxIter, const float eps);
+	/// @param maxIterations Max iterations of the algorithm
+	/// @param epsilon Max deviation from the target position
+	/// @return Returns true if the end effector is within epsilon from the target before max Iterations are reached else returns false
+	bool apply(const int maxIterations, const float epsilon);
 
 private:
 	Skeleton* m_skeleton;
