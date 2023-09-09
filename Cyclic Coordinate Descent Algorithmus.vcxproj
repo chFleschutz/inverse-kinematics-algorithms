@@ -18,21 +18,6 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\src\CCD.cpp" />
-    <ClCompile Include="..\src\FABRIK.cpp" />
-    <ClCompile Include="..\src\main.cpp" />
-    <ClCompile Include="..\src\Skeleton.cpp" />
-    <ClCompile Include="..\src\SkeletonNode.cpp" />
-    <ClCompile Include="..\src\Vector2D.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\src\CCD.h" />
-    <ClInclude Include="..\src\FABRIK.h" />
-    <ClInclude Include="..\src\Skeleton.h" />
-    <ClInclude Include="..\src\SkeletonNode.h" />
-    <ClInclude Include="..\src\Vector2D.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -153,6 +138,21 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="CCD.cpp" />
+    <ClCompile Include="FABRIK.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Skeleton.cpp" />
+    <ClCompile Include="SkeletonNode.cpp" />
+    <ClCompile Include="Vector2D.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CCD.h" />
+    <ClInclude Include="FABRIK.h" />
+    <ClInclude Include="Skeleton.h" />
+    <ClInclude Include="SkeletonNode.h" />
+    <ClInclude Include="Vector2D.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
