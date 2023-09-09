@@ -27,7 +27,7 @@
     <ClCompile Include="src\Skeleton.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="src\SkeletonNode.cpp">
+    <ClCompile Include="src\Bone.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="src\Vector2D.cpp">
@@ -44,7 +44,7 @@
     <ClInclude Include="src\Skeleton.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="src\SkeletonNode.h">
+    <ClInclude Include="src\Bone.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="src\Vector2D.h">

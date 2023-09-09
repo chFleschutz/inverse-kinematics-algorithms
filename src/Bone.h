@@ -1,15 +1,16 @@
 #pragma once
 #include "Vector2D.h"
 
-class SkeletonNode {
+class Bone
+{
 public:
-	SkeletonNode();
-	SkeletonNode(float length, float angle);
-	~SkeletonNode();
+	Bone();
+	Bone(float length, float angle);
+	~Bone();
 
-	void addChild(SkeletonNode* child);
-	inline SkeletonNode* getChild() { return m_child; }
-	inline SkeletonNode* getParent() { return m_parent; }
+	void addChild(Bone* child);
+	inline Bone* getChild() { return m_child; }
+	inline Bone* getParent() { return m_parent; }
 
 	inline void setLength(float length) { m_length = length; }
 	inline float getLength() { return m_length; }
@@ -20,8 +21,8 @@ public:
 	void print(int einruecktiefe);
 
 private:
-	SkeletonNode* m_child;
-	SkeletonNode* m_parent;
+	Bone* m_child;
+	Bone* m_parent;
 	float m_length;
 	float m_angle;
 };

@@ -4,15 +4,16 @@
 
 using namespace std;
 
-Skeleton* setupArmature();
-void printResults(Skeleton* arm, Vector2D& target);
-void runCCD(Skeleton* armature, Vector2D& target);
-void runFABRIK(Skeleton* armature, Vector2D& target);
+void setupSkeleton(Skeleton& skeleton);
+void printResults(Skeleton& arm, Vector2D& target);
+void runCCD(Skeleton& armature, Vector2D& target);
+void runFABRIK(Skeleton& armature, Vector2D& target);
 
-int main() 
+int main()
 {
 	// Setup Armature
-	Skeleton* arm = setupArmature();
+	Skeleton arm{};
+	setupSkeleton(arm);
 
 	// Target Location
 	Vector2D target = Vector2D(1.0f, 1.0f);
@@ -24,55 +25,52 @@ int main()
 
 	// Print Results
 	printResults(arm, target);
-
-	delete arm;
 }
 
-Skeleton* setupArmature()
+void setupSkeleton(Skeleton& skeleton)
 {
-	// Setup Armature
 	cout << "<< Input Values >>" << endl;
-	Skeleton* arm = new Skeleton();
-	SkeletonNode* node1 = new SkeletonNode(1.5f, 30.0f);
-	SkeletonNode* node2 = new SkeletonNode(1.0f, 30.0f);
-	SkeletonNode* node3 = new SkeletonNode(1.0f, 30.0f);
-	arm->setRoot(node1);
+	Bone* node1 = new Bone(1.5f, 30.0f);
+	Bone* node2 = new Bone(1.0f, 30.0f);
+	Bone* node3 = new Bone(1.0f, 30.0f);
+	skeleton.setRootBone(node1);
 	node1->addChild(node2);
 	node2->addChild(node3);
 	cout << "Skeleton: " << endl;
-	arm->print();
-	Vector2D pivot = arm->getPivotPosition();
+	skeleton.print();
+	Vector2D pivot = skeleton.getPivotPosition();
 	cout << "Pivotposition:  " << pivot << endl;
-	return arm;
 }
 
-void printResults(Skeleton* arm, Vector2D& target)
+void printResults(Skeleton& skeleton, Vector2D& target)
 {
-	// Print Result
 	cout << "<< Result Values >>" << endl;
 	cout << "Skeleton: " << endl;
-	arm->print();
-	Vector2D pivot = arm->getPivotPosition();
+	skeleton.print();
+	Vector2D pivot = skeleton.getPivotPosition();
 	cout << "Pivotposition:   " << pivot << endl;
 	cout << "Targetposition:  " << target << endl;
 	cout << "Targetdeviation: " << (target - pivot).length() << endl;
 }
 
-void runCCD(Skeleton* armature, Vector2D& target)
+void runCCD(Skeleton& skeleton, Vector2D& target)
 {
 	// Apply the CCD algorithm
 	cout << "<< Running CCD >>" << endl;
-	CCD algo = CCD(armature, target);
-	// Check if pivot is within the deviation from the target
-	if (algo.applyCCD(10, 0.01)) cout << "CCD successful" << endl << endl;
-	else cout << "CCD failure" << endl << endl;
+	CCD ccd_solver = CCD(&skeleton, target);
+	if (ccd_solver.apply(10, 0.01))
+		cout << "CCD successful" << endl << endl;
+	else
+		cout << "CCD failure" << endl << endl;
 }
 
-void runFABRIK(Skeleton* armature, Vector2D& target)
+void runFABRIK(Skeleton& skeleton, Vector2D& target)
 {
 	// Apply the FABRIK algorithm
 	cout << "<< Running FABRIK >>" << endl;
-	FABRIK algo = FABRIK(armature, target);
-	if (algo.apply(10, 0.1)) cout << "FABRIK succesful" << endl << endl;
-	else cout << "FABRIK failure" << endl << endl;
+	FABRIK fabrik_solver = FABRIK(&skeleton, target);
+	if (fabrik_solver.apply(10, 0.1))
+		cout << "FABRIK succesful" << endl << endl;
+	else
+		cout << "FABRIK failure" << endl << endl;
 }

@@ -1,7 +1,7 @@
 #include "Skeleton.h"
 
 
-Skeleton::Skeleton() 
+Skeleton::Skeleton()
 {
 	m_root = nullptr;
 	m_position = Vector2D(0.0f, 0.0f);
@@ -13,14 +13,15 @@ Skeleton::Skeleton(Vector2D position)
 	m_position = position;
 }
 
-Skeleton::~Skeleton() 
+Skeleton::~Skeleton()
 {
-	if (m_root)	delete m_root;
+	if (m_root)
+		delete m_root;
 }
 
-SkeletonNode* Skeleton::getPivot()
+Bone* Skeleton::pivotBone()
 {
-	SkeletonNode* node = m_root;
+	Bone* node = m_root;
 	while (node->getChild() != nullptr)
 	{
 		node = node->getChild();
@@ -28,9 +29,9 @@ SkeletonNode* Skeleton::getPivot()
 	return node;
 }
 
-Vector2D& Skeleton::getNodeBasePosition(SkeletonNode* node)
+Vector2D& Skeleton::boneBasePosition(Bone* node)
 {
-	SkeletonNode* currentNode = m_root;
+	Bone* currentNode = m_root;
 	Vector2D position = m_position;
 	float angle = 0.0f;
 	while (currentNode != node)
@@ -49,7 +50,7 @@ Vector2D& Skeleton::getPivotPosition()
 {
 	if (m_root == nullptr) return m_position;
 
-	SkeletonNode* currentNode = m_root;
+	Bone* currentNode = m_root;
 	Vector2D pivotPos = m_position;
 	float currentAngle = 0.0f;
 
@@ -59,13 +60,13 @@ Vector2D& Skeleton::getPivotPosition()
 		currentAngle += currentNode->getAngle();
 		pivotPos += Vector2D(currentNode->getLength() * cos(currentAngle * M_PI / 180), currentNode->getLength() * sin(currentAngle * M_PI / 180));
 		currentNode = currentNode->getChild();
-	} 
+	}
 	return pivotPos;
 }
 
 int Skeleton::getNumOfBones()
 {
-	SkeletonNode* node = m_root;
+	Bone* node = m_root;
 	int boneCount = 0;
 	while (node != nullptr)
 	{
@@ -75,6 +76,7 @@ int Skeleton::getNumOfBones()
 	return boneCount;
 }
 
-void Skeleton::print() {
+void Skeleton::print()
+{
 	if (m_root) m_root->print(0);
 }
