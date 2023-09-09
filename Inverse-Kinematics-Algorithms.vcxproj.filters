@@ -33,6 +33,9 @@
     <ClCompile Include="src\Vector2D.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="src\InverseKinematicsSolver.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CCD.h">
@@ -48,6 +51,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="src\Vector2D.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\InverseKinematicsSolver.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

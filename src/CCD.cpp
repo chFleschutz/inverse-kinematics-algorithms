@@ -1,15 +1,17 @@
 #include "CCD.h"
 
-CCD::CCD(Skeleton* skeleton, const Vector2D& target)
+#include <math.h>
+
+
+CCD::CCD(Skeleton* skeleton, const Vector2D& target) : InverseKinematicsSolver(skeleton, target)
 {
-	m_skeleton = skeleton;
-	m_targetPos = target;
 }
 
-bool CCD::apply(const int maxIter, const float eps)
+bool CCD::solve(const int maxIter, const float eps)
 {
 	// Check if skeleton is set
-	if (m_skeleton == nullptr) return false;
+	if (m_skeleton == nullptr) 
+		return false;
 
 	// Find Last-Element in Skeleton
 	Bone* lastNode = m_skeleton->rootBone();
@@ -43,9 +45,8 @@ bool CCD::apply(const int maxIter, const float eps)
 			node = node->parent();
 		}
 		// If Pivot is near enought to the Target return true
-		if ((m_targetPos - m_skeleton->pivotPosition()).length() < eps) return true;
-
-		//m_skeleton->print();
+		if ((m_targetPos - m_skeleton->pivotPosition()).length() < eps) 
+			return true;
 	}
 	// If the max Interations are reached without the Pivot being near enough the Target return false
 	return false;

@@ -22,8 +22,8 @@ int main()
 	std::cout << "Targetlocation: " << target << std::endl << std::endl;
 
 	// Inverse Kinematik
-	//runCCD(arm, target);
-	runFABRIK(arm, target);
+	runCCD(arm, target);
+	//runFABRIK(arm, target);
 
 	// Print Results
 	printResults(arm, target);
@@ -34,7 +34,7 @@ void runCCD(Skeleton& skeleton, Vector2D& target)
 	// Apply the CCD algorithm
 	std::cout << "<< Running CCD >>" << std::endl;
 	CCD ccd_solver = CCD(&skeleton, target);
-	if (ccd_solver.apply(10, 0.01f))
+	if (ccd_solver.solve(10, 0.01f))
 		std::cout << "CCD successful" << std::endl << std::endl;
 	else
 		std::cout << "CCD failure" << std::endl << std::endl;
@@ -45,7 +45,7 @@ void runFABRIK(Skeleton& skeleton, Vector2D& target)
 	// Apply the FABRIK algorithm
 	std::cout << "<< Running FABRIK >>" << std::endl;
 	FABRIK fabrik_solver = FABRIK(&skeleton, target);
-	if (fabrik_solver.apply(10, 0.1f))
+	if (fabrik_solver.solve(10, 0.1f))
 		std::cout << "FABRIK succesful" << std::endl << std::endl;
 	else
 		std::cout << "FABRIK failure" << std::endl << std::endl;

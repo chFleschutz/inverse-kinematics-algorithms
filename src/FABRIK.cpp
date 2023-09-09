@@ -1,14 +1,14 @@
 #include "FABRIK.h"
 
 #include <vector>
+#include <math.h>
 
-FABRIK::FABRIK(Skeleton* skeleton, const Vector2D& target)
+
+FABRIK::FABRIK(Skeleton* skeleton, const Vector2D& target) : InverseKinematicsSolver(skeleton, target)
 {
-	m_skeleton = skeleton;
-	m_targetPos = target;
 }
 
-bool FABRIK::apply(int maxIterations, float epsilon)
+bool FABRIK::solve(int maxIterations, float epsilon)
 {
 	Bone* node;
 	const int boneCount = m_skeleton->numOfBones();
