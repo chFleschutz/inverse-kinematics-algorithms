@@ -21,16 +21,18 @@
   <ItemGroup>
     <ClCompile Include="src\CCD.cpp" />
     <ClCompile Include="src\FABRIK.cpp" />
+    <ClCompile Include="src\InverseKinematicsSolver.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Skeleton.cpp" />
-    <ClCompile Include="src\SkeletonNode.cpp" />
+    <ClCompile Include="src\Bone.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CCD.h" />
     <ClInclude Include="src\FABRIK.h" />
+    <ClInclude Include="src\InverseKinematicsSolver.h" />
     <ClInclude Include="src\Skeleton.h" />
-    <ClInclude Include="src\SkeletonNode.h" />
+    <ClInclude Include="src\Bone.h" />
     <ClInclude Include="src\Vector2D.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

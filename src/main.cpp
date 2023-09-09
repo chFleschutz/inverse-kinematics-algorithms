@@ -1,78 +1,78 @@
-#include <iostream>
 #include "CCD.h"
 #include "FABRIK.h"
 
-using namespace std;
+#include <iostream>
 
-Skeleton* setupArmature();
-void printResults(Skeleton* arm, Vector2D& target);
-void runCCD(Skeleton* armature, Vector2D& target);
-void runFABRIK(Skeleton* armature, Vector2D& target);
+/// Demo for ik algorithms
+void runCCD(Skeleton& armature, Vector2D& target);
+void runFABRIK(Skeleton& armature, Vector2D& target);
 
-int main() 
+void setupSkeleton(Skeleton& skeleton);
+void printResults(Skeleton& arm, Vector2D& target);
+
+
+int main()
 {
 	// Setup Armature
-	Skeleton* arm = setupArmature();
+	Skeleton arm{};
+	setupSkeleton(arm);
 
 	// Target Location
 	Vector2D target = Vector2D(1.0f, 1.0f);
-	cout << "Targetlocation: " << target << endl << endl;
+	std::cout << "Targetlocation: " << target << std::endl << std::endl;
 
 	// Inverse Kinematik
-	//runCCD(arm, target);
-	runFABRIK(arm, target);
+	runCCD(arm, target);
+	//runFABRIK(arm, target);
 
 	// Print Results
 	printResults(arm, target);
-
-	delete arm;
 }
 
-Skeleton* setupArmature()
-{
-	// Setup Armature
-	cout << "<< Input Values >>" << endl;
-	Skeleton* arm = new Skeleton();
-	SkeletonNode* node1 = new SkeletonNode(1.5f, 30.0f);
-	SkeletonNode* node2 = new SkeletonNode(1.0f, 30.0f);
-	SkeletonNode* node3 = new SkeletonNode(1.0f, 30.0f);
-	arm->setRoot(node1);
-	node1->addChild(node2);
-	node2->addChild(node3);
-	cout << "Skeleton: " << endl;
-	arm->print();
-	Vector2D pivot = arm->getPivotPosition();
-	cout << "Pivotposition:  " << pivot << endl;
-	return arm;
-}
-
-void printResults(Skeleton* arm, Vector2D& target)
-{
-	// Print Result
-	cout << "<< Result Values >>" << endl;
-	cout << "Skeleton: " << endl;
-	arm->print();
-	Vector2D pivot = arm->getPivotPosition();
-	cout << "Pivotposition:   " << pivot << endl;
-	cout << "Targetposition:  " << target << endl;
-	cout << "Targetdeviation: " << (target - pivot).length() << endl;
-}
-
-void runCCD(Skeleton* armature, Vector2D& target)
+void runCCD(Skeleton& skeleton, Vector2D& target)
 {
 	// Apply the CCD algorithm
-	cout << "<< Running CCD >>" << endl;
-	CCD algo = CCD(armature, target);
-	// Check if pivot is within the deviation from the target
-	if (algo.applyCCD(10, 0.01)) cout << "CCD successful" << endl << endl;
-	else cout << "CCD failure" << endl << endl;
+	std::cout << "<< Running CCD >>" << std::endl;
+	CCD ccd_solver = CCD(&skeleton, target);
+	if (ccd_solver.solve(10, 0.01f))
+		std::cout << "CCD successful" << std::endl << std::endl;
+	else
+		std::cout << "CCD failure" << std::endl << std::endl;
 }
 
-void runFABRIK(Skeleton* armature, Vector2D& target)
+void runFABRIK(Skeleton& skeleton, Vector2D& target)
 {
 	// Apply the FABRIK algorithm
-	cout << "<< Running FABRIK >>" << endl;
-	FABRIK algo = FABRIK(armature, target);
-	if (algo.apply(10, 0.1)) cout << "FABRIK succesful" << endl << endl;
-	else cout << "FABRIK failure" << endl << endl;
+	std::cout << "<< Running FABRIK >>" << std::endl;
+	FABRIK fabrik_solver = FABRIK(&skeleton, target);
+	if (fabrik_solver.solve(10, 0.1f))
+		std::cout << "FABRIK succesful" << std::endl << std::endl;
+	else
+		std::cout << "FABRIK failure" << std::endl << std::endl;
+}
+
+void setupSkeleton(Skeleton& skeleton)
+{
+	std::cout << "<< Input Values >>" << std::endl;
+	Bone* node1 = new Bone(1.5f, 30.0f);
+	Bone* node2 = new Bone(1.0f, 30.0f);
+	Bone* node3 = new Bone(1.0f, 30.0f);
+	skeleton.setRootBone(node1);
+	node1->addChild(node2);
+	node2->addChild(node3);
+	std::cout << "Skeleton: " << std::endl;
+	skeleton.print();
+	Vector2D pivot = skeleton.pivotPosition();
+	std::cout << "Pivotposition:  " << pivot << std::endl;
+}
+
+void printResults(Skeleton& skeleton, Vector2D& target)
+{
+	std::cout << "<< Result Values >>" << std::endl;
+	std::cout << "Skeleton: " << std::endl;
+	skeleton.print();
+	Vector2D pivot = skeleton.pivotPosition();
+	std::cout << "Pivotposition:   " << pivot << std::endl;
+	std::cout << "Targetposition:  " << target << std::endl;
+	std::cout << "Targetdeviation: " << (target - pivot).length() << std::endl;
 }

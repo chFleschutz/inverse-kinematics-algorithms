@@ -1,17 +1,22 @@
 #pragma once
-#include <math.h>
+
+#include "InverseKinematicsSolver.h"
 #include "Skeleton.h"
 #include "Vector2D.h"
 
-class FABRIK
+
+class FABRIK : public InverseKinematicsSolver
 {
 public:
-	FABRIK(Skeleton* skeleton, Vector2D target);
+	/// @brief Creates a solver for the Forward And Backward Reaching Inverse Kinematics (FABRIK) algorithm
+	/// @param skeleton Pointer to the skeleton which should be solved
+	/// @param target Target position of the end effector
+	FABRIK(Skeleton* skeleton, const Vector2D& target = Vector2D(0.0f, 0.0f));
 
-	bool apply(int maxIter, float eps);
-
-private:
-	Skeleton* m_skeleton;
-	Vector2D m_target;
+	/// @brief Trys to set the end effector of the skeleton to the target position by rotating the bones of the skeleton
+	/// @param maxItererations Max iterations of the algorithm
+	/// @param epsilon Max deviation from the target position
+	/// @return Returns true if the end effector is within epsilon from the target before max Iterations are reached else returns false
+	bool solve(int maxItererations, float epsilon) override;
 };
 

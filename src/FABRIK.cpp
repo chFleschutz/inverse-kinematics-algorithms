@@ -1,73 +1,74 @@
 #include "FABRIK.h"
 
-FABRIK::FABRIK(Skeleton* skeleton, Vector2D target)
+#include <vector>
+#include <math.h>
+
+
+FABRIK::FABRIK(Skeleton* skeleton, const Vector2D& target) : InverseKinematicsSolver(skeleton, target)
 {
-    m_skeleton = skeleton;
-    m_target = target;
 }
 
-bool FABRIK::apply(int maxIter, float eps)
+bool FABRIK::solve(int maxIterations, float epsilon)
 {
-    
-    SkeletonNode* node;
-    const int boneCount = m_skeleton->getNumOfBones();
-    Vector2D* jointPos = new Vector2D[boneCount + 1];
+	Bone* node;
+	const int boneCount = m_skeleton->numOfBones();
+	std::vector<Vector2D> jointPos(boneCount + 1);
 
-    // Save Joint Positions
-    node = m_skeleton->getRoot();
-    jointPos[0] = m_skeleton->getPosition();
-    for (int i = 1; i < boneCount + 1; i++)
-    {
-        jointPos[i] = jointPos[i - 1] + Vector2D::makeVector(node->getLength(), node->getAngle());
-        node = node->getChild();
-    }
-    
-    for (int i = 0; i < maxIter; i++)
-    {
-        // Forward Reaching Inverse Kinematik
-        node = m_skeleton->getPivot();
-        jointPos[boneCount] = m_target;
-        for (int i = boneCount - 1; i > 0; i--)
-        {
-            // Vector from last base to current Base with the length of the bone
-            Vector2D vec = (jointPos[i] - jointPos[i + 1]).normalize() * node->getLength();
-            // Set the joint Pos
-            jointPos[i] = jointPos[i + 1] + vec;
-            // Set Node to the previous Bone
-            node = node->getParent();
-        }
+	// Save Joint Positions
+	node = m_skeleton->rootBone();
+	jointPos[0] = m_skeleton->rootPosition();
+	for (int i = 1; i < boneCount + 1; i++)
+	{
+		jointPos[i] = jointPos[i - 1] + Vector2D::makeVector(node->length(), node->angle());
+		node = node->child();
+	}
 
-        // Backward Reaching Inverse Kinematik
-        node = m_skeleton->getRoot();
-        jointPos[0] = m_skeleton->getPosition();
-        for (int i = 1; i < boneCount - 1; i++)
-        {
-            // Vector from last Base to current Base with the length of the bone
-            Vector2D vec = (jointPos[i] - jointPos[i - 1]).normalize() * node->getLength();
-            jointPos[i] = jointPos[i - 1] + vec;
+	for (int i = 0; i < maxIterations; i++)
+	{
+		// Forward Reaching Inverse Kinematik
+		node = m_skeleton->pivotBone();
+		jointPos[boneCount] = m_targetPos;
+		for (int j = boneCount - 1; j > 0; j--)
+		{
+			// Vector from last base to current Base with the length of the bone
+			Vector2D vec = (jointPos[j] - jointPos[j + 1]).normalize() * node->length();
+			// Set the joint Pos
+			jointPos[j] = jointPos[j + 1] + vec;
+			// Set Node to the previous Bone
+			node = node->parent();
+		}
 
-            node = node->getChild();
-        }
+		// Backward Reaching Inverse Kinematik
+		node = m_skeleton->rootBone();
+		jointPos[0] = m_skeleton->rootPosition();
+		for (int k = 1; k < boneCount - 1; k++)
+		{
+			// Vector from last Base to current Base with the length of the bone
+			Vector2D vec = (jointPos[k] - jointPos[k - 1]).normalize() * node->length();
+			jointPos[k] = jointPos[k - 1] + vec; 
 
-        // Rotate Bones in the Skeleton
-        node = m_skeleton->getRoot();
-        Vector2D lastVec = Vector2D(1, 0);
-        for (int i = 1; i < boneCount + 1; i++)
-        {
-            // Vector which represents the Bone direction
-            Vector2D vec = (jointPos[i] - jointPos[i - 1]).normalize();
-            // Angle between last bone and current bone
-            float rotateAngle = acos(lastVec.dot(vec)) * 180.0f / M_PI;
-            node->setAngle(rotateAngle);
+			node = node->child();
+		}
 
-            lastVec = vec;
-            node = node->getChild();
-        }
+		// Rotate Bones in the Skeleton
+		node = m_skeleton->rootBone();
+		Vector2D lastVec = Vector2D(1, 0);
+		for (int l = 1; l < boneCount + 1; l++)
+		{
+			// Vector which represents the Bone direction
+			Vector2D vec = (jointPos[l] - jointPos[l - 1]).normalize();
+			// Angle between last bone and current bone
+			float rotateAngle = acos(lastVec.dot(vec)) * 180.0f / static_cast<float>(M_PI);
+			node->setAngle(rotateAngle);
 
-        // Return if Pivot is near enougth to the Target
-        if ((m_target - m_skeleton->getPivotPosition()).length() < eps) return true;
-    }
+			lastVec = vec;
+			node = node->child();
+		}
 
-    // Algorithm finished by reaching maxIter -> pivot not near enough to the target
-    return false;
+		// Return if Pivot is near enougth to the Target
+		if ((m_targetPos - m_skeleton->pivotPosition()).length() < epsilon) return true;
+	}
+
+	// Algorithm finished by reaching maxIter -> pivot not near enough to the target
+	return false;
 }

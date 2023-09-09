@@ -5,41 +5,50 @@
 #include <iostream>
 #include <iomanip>
 
+/// @brief Small convenient helper class representing a two-dimensional vector
 class Vector2D {
 public:
 	Vector2D();
 	Vector2D(float x, float y);
 
-	inline float x() { return m_x; }
-	inline float y() { return m_y; }
+	inline float x() const { return m_x; }
+	inline float y() const { return m_y; }
 
-	// Gives the Vector the length 1 
+	/// @brief Normalize the Vector2D so it has a length of one
+	/// @return A reference to this
 	Vector2D& normalize();
 
-	// Prints the Vector to Console in form: ( x, y )
+	/// @brief Prints the Vector2D to the console formated like this ( x, y )
 	void print();
-
-	// Creates a Vector with the length and rotation provided
+	
+	/// @brief Creates and returns a Vector2D of length and rotation
 	static Vector2D makeVector(float length, float rotation);
 
-	// Dot-Product
-	float dot(Vector2D& vector);
+	/// @brief Calculates and returns the dot product of this vector and other
+	float dot(Vector2D& other);
 
-	// Cross-Product
-	float cross(Vector2D& vector);
+	/// @brief Calculates and returns the cross product of this vector and other
+	float cross(Vector2D& other);
 
-	// Returns the Length of the Vector
+	/// @brief Returns the length of this Vector2D
 	float length();
 
-	Vector2D operator+(Vector2D other);
-	Vector2D operator-(Vector2D& other);
+	/// @brief Adds two Vector2D and returns the result
+	Vector2D operator+(const Vector2D& other);
+	/// @brief Adds other to this vector and returns a refrence to this
 	Vector2D& operator+=(Vector2D other);
+
+	/// @brief Subtracts two Vector2D and returns the result
+	Vector2D operator-(const Vector2D& other);
+	/// @brief Subtracts other from this vector and returns a refrence to this
 	Vector2D& operator-=(Vector2D other);
+
+	/// @brief Divides this Vector2D by a float and returns the result
 	Vector2D operator/(float other);
+	/// @brief Multiplies this Vector2D with a float and returns the result
 	Vector2D operator*(float other);
 
-
-	// Prints the Vector in Form: ( x, y )
+	/// @brief Prints the Vector2D to the console formated like this ( x, y )
 	friend std::ostream& operator<<(std::ostream& os, Vector2D& other);
 
 private:
