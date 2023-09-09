@@ -15,36 +15,38 @@ To use the CCD / FABRIK algorithm, follow these steps:
 
 1. Include `CCD.h` or `FABRIK.h`.
 
-1. Create a `Skeleton` with `SkeletonNode` as the joints.
+1. Create a `Skeleton` with `Bone`s as the joints.
 
 2. Create an instance of the `CCD` or `FABRIK` class, providing the skeleton and the target position.
 
-3. Call the `apply` method of the `CCD` or `FABRIK` instance to compute the new joint angles for the skeleton that will position the end effector closer to the target.
+3. Call the `solve` method of the `CCD` or `FABRIK` instance to compute the new joint angles for the skeleton that will position the end effector closer to the target.
 
 4. Use the updated joint angles to control your robotic arm or animation rig.
+
 
 Here's a basic example of how to use the CCD algorithm:
 
 ```cpp
 // Create simple skeleton
-Skeleton* arm = new Skeleton();
-SkeletonNode* node1 = new SkeletonNode(1.5f, 30.0f);
-SkeletonNode* node2 = new SkeletonNode(1.0f, 30.0f);
-SkeletonNode* node3 = new SkeletonNode(1.0f, 30.0f);
-arm->setRoot(node1);
-node1->addChild(node2);
-node2->addChild(node3);
+Skeleton skeleton;
+Bone* bone1 = new Bone(1.5f, 30.0f);
+Bone* bone2 = new Bone(1.0f, 30.0f);
+skeleton.setRootBone(bone1);
+bone1->addChild(bone2);
 
 // Create target position
 Vector2D target = Vector2D(1.0f, 1.0f);
 
 // Apply CDD algorithm
-CCD ccd_solver = CCD(armature, target);
+CCD ccd_solver = CCD(skeleton, target);
 ccd_solver.applyCCD(10, 0.01)
 ```
+In addition, you can explore a small demo in the main.cpp file.
+
 
 ## Installation
 You can simply clone this repository to get started:
 ```bash
-git clone https://github.com/chFleschutz/Cyclic-Coordinate-Descent-Algorithm.git
+https://github.com/chFleschutz/inverse-kinematics-algorithms.git
 ```
+To view a brief demonstration, open the solution in Visual Studio and run it.
