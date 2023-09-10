@@ -13,19 +13,16 @@ void printResults(Skeleton& arm, Vector2D& target);
 
 int main()
 {
-	// Setup Armature
 	Skeleton arm{};
 	setupSkeleton(arm);
 
-	// Target Location
 	Vector2D target = Vector2D(1.0f, 1.0f);
 	std::cout << "Targetlocation: " << target << std::endl << std::endl;
 
-	// Inverse Kinematik
+	// Inverse kinematics solver
 	runCCD(arm, target);
 	//runFABRIK(arm, target);
-
-	// Print Results
+	
 	printResults(arm, target);
 }
 
@@ -54,12 +51,12 @@ void runFABRIK(Skeleton& skeleton, Vector2D& target)
 void setupSkeleton(Skeleton& skeleton)
 {
 	std::cout << "<< Input Values >>" << std::endl;
-	Bone* node1 = new Bone(1.5f, 30.0f);
-	Bone* node2 = new Bone(1.0f, 30.0f);
-	Bone* node3 = new Bone(1.0f, 30.0f);
-	skeleton.setRootBone(node1);
-	node1->addChild(node2);
-	node2->addChild(node3);
+	Bone* bone1 = new Bone(1.5f, 30.0f);
+	Bone* bone2 = new Bone(1.0f, 30.0f);
+	Bone* bone3 = new Bone(1.0f, 30.0f);
+	skeleton.setRootBone(bone1);
+	bone1->addChild(bone2);
+	bone2->addChild(bone3);
 	std::cout << "Skeleton: " << std::endl;
 	skeleton.print();
 	Vector2D pivot = skeleton.pivotPosition();

@@ -1,7 +1,10 @@
 #pragma once
+
 #include "Bone.h"
 #include "Vector2D.h"
 
+/// @brief Represents a skeletal structure composed of a chain of bones
+/// @see Bone
 class Skeleton
 {
 public:
@@ -10,9 +13,10 @@ public:
 	/// @brief Creates a empty skeleton at positon
 	/// @param position Positon of the root of the skeleton
 	Skeleton(Vector2D position);
+	/// @brief Deletes the whole chain of bones
 	~Skeleton();
 
-	/// @brief Sets the root Bone of the skeleton
+	/// @brief Sets the root bone of the skeleton
 	void setRootBone(Bone* root) { m_root = root; }
 	/// @brief Sets the root position of the skeleton
 	void setRootPosition(const Vector2D& position) { m_position = position; }

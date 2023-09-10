@@ -1,9 +1,10 @@
 #pragma once
+
 #define _USE_MATH_DEFINES
 
-#include <math.h>
-#include <iostream>
 #include <iomanip>
+#include <iostream>
+#include <math.h>
 
 /// @brief Small convenient helper class representing a two-dimensional vector
 class Vector2D {
