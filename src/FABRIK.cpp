@@ -1,10 +1,10 @@
 #include "FABRIK.h"
 
 #include <vector>
-#include <math.h>
+#include <numbers>
 
 
-FABRIK::FABRIK(Skeleton* skeleton, const Vector2D& target) : InverseKinematicsSolver(skeleton, target)
+FABRIK::FABRIK(Skeleton* skeleton, const Vector2& target) : InverseKinematicsSolver(skeleton, target)
 {
 }
 
@@ -12,14 +12,14 @@ bool FABRIK::solve(int maxIterations, float epsilon)
 {
 	Bone* node;
 	const int boneCount = m_skeleton->numOfBones();
-	std::vector<Vector2D> jointPos(boneCount + 1);
+	std::vector<Vector2> jointPos(boneCount + 1);
 
 	// Save Joint Positions
 	node = m_skeleton->rootBone();
 	jointPos[0] = m_skeleton->rootPosition();
 	for (int i = 1; i < boneCount + 1; i++)
 	{
-		jointPos[i] = jointPos[i - 1] + Vector2D::makeVector(node->length(), node->angle());
+		jointPos[i] = jointPos[i - 1] + Vector2::makeVector(node->length(), node->angle());
 		node = node->child();
 	}
 
@@ -31,7 +31,7 @@ bool FABRIK::solve(int maxIterations, float epsilon)
 		for (int j = boneCount - 1; j > 0; j--)
 		{
 			// Vector from last base to current Base with the length of the bone
-			Vector2D vec = (jointPos[j] - jointPos[j + 1]).normalize() * node->length();
+			Vector2 vec = (jointPos[j] - jointPos[j + 1]).normalize() * node->length();
 			// Set the joint Pos
 			jointPos[j] = jointPos[j + 1] + vec;
 			// Set Node to the previous Bone
@@ -44,7 +44,7 @@ bool FABRIK::solve(int maxIterations, float epsilon)
 		for (int k = 1; k < boneCount - 1; k++)
 		{
 			// Vector from last Base to current Base with the length of the bone
-			Vector2D vec = (jointPos[k] - jointPos[k - 1]).normalize() * node->length();
+			Vector2 vec = (jointPos[k] - jointPos[k - 1]).normalize() * node->length();
 			jointPos[k] = jointPos[k - 1] + vec; 
 
 			node = node->child();
@@ -52,13 +52,13 @@ bool FABRIK::solve(int maxIterations, float epsilon)
 
 		// Rotate Bones in the Skeleton
 		node = m_skeleton->rootBone();
-		Vector2D lastVec = Vector2D(1, 0);
+		Vector2 lastVec = Vector2(1, 0);
 		for (int l = 1; l < boneCount + 1; l++)
 		{
 			// Vector which represents the Bone direction
-			Vector2D vec = (jointPos[l] - jointPos[l - 1]).normalize();
+			Vector2 vec = (jointPos[l] - jointPos[l - 1]).normalize();
 			// Angle between last bone and current bone
-			float rotateAngle = acos(lastVec.dot(vec)) * 180.0f / static_cast<float>(M_PI);
+			float rotateAngle = acos(lastVec.dot(vec)) * 180.0f / std::numbers::pi;
 			node->setAngle(rotateAngle);
 
 			lastVec = vec;

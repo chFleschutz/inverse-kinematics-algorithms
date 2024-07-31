@@ -4,11 +4,11 @@
 #include <iostream>
 
 /// Demo for ik algorithms
-void runCCD(Skeleton& armature, Vector2D& target);
-void runFABRIK(Skeleton& armature, Vector2D& target);
+void runCCD(Skeleton& armature, Vector2& target);
+void runFABRIK(Skeleton& armature, Vector2& target);
 
 void setupSkeleton(Skeleton& skeleton);
-void printResults(Skeleton& arm, Vector2D& target);
+void printResults(Skeleton& arm, Vector2& target);
 
 
 int main()
@@ -16,7 +16,7 @@ int main()
 	Skeleton arm{};
 	setupSkeleton(arm);
 
-	Vector2D target = Vector2D(1.0f, 1.0f);
+	Vector2 target = Vector2(1.0f, 1.0f);
 	std::cout << "Targetlocation: " << target << std::endl << std::endl;
 
 	// Inverse kinematics solver
@@ -26,7 +26,7 @@ int main()
 	printResults(arm, target);
 }
 
-void runCCD(Skeleton& skeleton, Vector2D& target)
+void runCCD(Skeleton& skeleton, Vector2& target)
 {
 	// Apply the CCD algorithm
 	std::cout << "<< Running CCD >>" << std::endl;
@@ -37,7 +37,7 @@ void runCCD(Skeleton& skeleton, Vector2D& target)
 		std::cout << "CCD failure" << std::endl << std::endl;
 }
 
-void runFABRIK(Skeleton& skeleton, Vector2D& target)
+void runFABRIK(Skeleton& skeleton, Vector2& target)
 {
 	// Apply the FABRIK algorithm
 	std::cout << "<< Running FABRIK >>" << std::endl;
@@ -59,16 +59,16 @@ void setupSkeleton(Skeleton& skeleton)
 	bone2->addChild(bone3);
 	std::cout << "Skeleton: " << std::endl;
 	skeleton.print();
-	Vector2D pivot = skeleton.pivotPosition();
+	Vector2 pivot = skeleton.pivotPosition();
 	std::cout << "Pivotposition:  " << pivot << std::endl;
 }
 
-void printResults(Skeleton& skeleton, Vector2D& target)
+void printResults(Skeleton& skeleton, Vector2& target)
 {
 	std::cout << "<< Result Values >>" << std::endl;
 	std::cout << "Skeleton: " << std::endl;
 	skeleton.print();
-	Vector2D pivot = skeleton.pivotPosition();
+	Vector2 pivot = skeleton.pivotPosition();
 	std::cout << "Pivotposition:   " << pivot << std::endl;
 	std::cout << "Targetposition:  " << target << std::endl;
 	std::cout << "Targetdeviation: " << (target - pivot).length() << std::endl;

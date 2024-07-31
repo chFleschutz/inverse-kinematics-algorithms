@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Vector2D.h"
+#include "Vector2.h"
 
 /// @brief Represents a bone in a skeleton
 /// @note The angle represents the orientation of the bone relative to its parent bone

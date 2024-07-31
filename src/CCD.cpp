@@ -1,9 +1,8 @@
 #include "CCD.h"
 
-#include <math.h>
+#include <numbers>
 
-
-CCD::CCD(Skeleton* skeleton, const Vector2D& target) : InverseKinematicsSolver(skeleton, target)
+CCD::CCD(Skeleton* skeleton, const Vector2& target) : InverseKinematicsSolver(skeleton, target)
 {
 }
 
@@ -29,13 +28,13 @@ bool CCD::solve(const int maxIter, const float eps)
 		while (node != nullptr)
 		{
 			// Calculating Vectors
-			Vector2D pivotPos = m_skeleton->pivotPosition();
-			Vector2D currrentBasePos = m_skeleton->boneBasePosition(node);
-			Vector2D basePivotVec = (pivotPos - currrentBasePos).normalize();
-			Vector2D baseTargetVec = (m_targetPos - currrentBasePos).normalize();
+			Vector2 pivotPos = m_skeleton->pivotPosition();
+			Vector2 currrentBasePos = m_skeleton->boneBasePosition(node);
+			Vector2 basePivotVec = (pivotPos - currrentBasePos).normalize();
+			Vector2 baseTargetVec = (m_targetPos - currrentBasePos).normalize();
 
 			// Angle between BasePivotVec and BaseTargetVec
-			float rotateAngle = acos(basePivotVec.dot(baseTargetVec)) * 180.0f / static_cast<float>(M_PI);
+			float rotateAngle = acos(basePivotVec.dot(baseTargetVec)) * 180.0f / std::numbers::pi;
 			if (basePivotVec.cross(baseTargetVec) < 0.0f) rotateAngle *= -1.0f;
 
 			// Rotate Bone in direction of the Pivot

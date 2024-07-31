@@ -4,10 +4,10 @@
 Skeleton::Skeleton()
 {
 	m_root = nullptr;
-	m_position = Vector2D(0.0f, 0.0f);
+	m_position = Vector2(0.0f, 0.0f);
 }
 
-Skeleton::Skeleton(Vector2D position)
+Skeleton::Skeleton(Vector2 position)
 {
 	m_root = nullptr;
 	m_position = position;
@@ -29,29 +29,29 @@ Bone* Skeleton::pivotBone()
 	return node;
 }
 
-Vector2D Skeleton::boneBasePosition(Bone* node)
+Vector2 Skeleton::boneBasePosition(Bone* node)
 {
 	Bone* currentNode = m_root;
-	Vector2D position = m_position;
+	Vector2 position = m_position;
 	float angle = 0.0f;
 	while (currentNode != node)
 	{
 		if (currentNode == nullptr) break;
 
 		angle += currentNode->angle();
-		position += Vector2D::makeVector(currentNode->length(), angle);
+		position += Vector2::makeVector(currentNode->length(), angle);
 		currentNode = currentNode->child();
 	}
 	return position;
 }
 
 // Calculates the Pivot Position by iterating trought Nodes and adding their lengths 
-Vector2D Skeleton::pivotPosition()
+Vector2 Skeleton::pivotPosition()
 {
 	if (m_root == nullptr) return m_position;
 
 	Bone* currentBone = m_root;
-	Vector2D pivotPos = m_position;
+	Vector2 pivotPos = m_position;
 	float currentAngle = 0.0f;
 
 	// Iterate through all Nodes
@@ -61,7 +61,7 @@ Vector2D Skeleton::pivotPosition()
 		//float x = currentBone->length() * cos(currentAngle * static_cast<float>(M_PI) / 180.f);
 		//float y = currentBone->length() * sin(currentAngle * static_cast<float>(M_PI) / 180.f);
 		//pivotPos += Vector2D(x, y);
-		pivotPos += Vector2D::makeVector(currentBone->length(), currentAngle);
+		pivotPos += Vector2::makeVector(currentBone->length(), currentAngle);
 		currentBone = currentBone->child();
 	}
 	return pivotPos;
