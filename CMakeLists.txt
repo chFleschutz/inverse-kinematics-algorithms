@@ -10,7 +10,7 @@ file(GLOB_RECURSE SOURCES src/*.cpp)
 
 include_directories(${PROJECT_SOURCE_DIR}/src)
 
-add_library(IKSolver STATIC ${HEADERS} ${SOURCES})
+add_library(ik-algorithms STATIC ${HEADERS} ${SOURCES})
 
 
 # Optional Example Project

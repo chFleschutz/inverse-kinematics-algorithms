@@ -7,4 +7,4 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(IKExample main.cpp)
 
-target_link_libraries(IKExample PRIVATE IKSolver)
+target_link_libraries(IKExample PRIVATE ik-algorithms)
