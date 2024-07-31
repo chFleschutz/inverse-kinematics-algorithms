@@ -22,7 +22,7 @@ int main()
 	// Inverse kinematics solver
 	runCCD(arm, target);
 	//runFABRIK(arm, target);
-	
+
 	printResults(arm, target);
 }
 
