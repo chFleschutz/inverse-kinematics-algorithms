@@ -51,12 +51,9 @@ void runFABRIK(Skeleton& skeleton, Vector2& target)
 void setupSkeleton(Skeleton& skeleton)
 {
 	std::cout << "<< Input Values >>" << std::endl;
-	Bone* bone1 = new Bone(1.5f, 30.0f);
-	Bone* bone2 = new Bone(1.0f, 30.0f);
-	Bone* bone3 = new Bone(1.0f, 30.0f);
-	skeleton.setRootBone(bone1);
-	bone1->addChild(bone2);
-	bone2->addChild(bone3);
+	skeleton.addBone(1.5f, 30.0f);
+	skeleton.addBone(1.0f, 30.0f);
+	skeleton.addBone(1.0f, 30.0f);
 	std::cout << "Skeleton: " << std::endl;
 	skeleton.print();
 	Vector2 pivot = skeleton.pivotPosition();

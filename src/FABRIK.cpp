@@ -16,11 +16,11 @@ bool FABRIK::solve(int maxIterations, float epsilon)
 
 	// Save Joint Positions
 	node = m_skeleton->rootBone();
-	jointPos[0] = m_skeleton->rootPosition();
+	jointPos[0] = m_skeleton->position();
 	for (int i = 1; i < boneCount + 1; i++)
 	{
-		jointPos[i] = jointPos[i - 1] + Vector2::makeVector(node->length(), node->angle());
-		node = node->child();
+		jointPos[i] = jointPos[i - 1] + Vector2::makeVector(node->length, node->angle);
+		node = node->child;
 	}
 
 	for (int i = 0; i < maxIterations; i++)
@@ -31,23 +31,23 @@ bool FABRIK::solve(int maxIterations, float epsilon)
 		for (int j = boneCount - 1; j > 0; j--)
 		{
 			// Vector from last base to current Base with the length of the bone
-			Vector2 vec = (jointPos[j] - jointPos[j + 1]).normalize() * node->length();
+			Vector2 vec = (jointPos[j] - jointPos[j + 1]).normalize() * node->length;
 			// Set the joint Pos
 			jointPos[j] = jointPos[j + 1] + vec;
 			// Set Node to the previous Bone
-			node = node->parent();
+			node = node->parent;
 		}
 
 		// Backward Reaching Inverse Kinematik
 		node = m_skeleton->rootBone();
-		jointPos[0] = m_skeleton->rootPosition();
+		jointPos[0] = m_skeleton->position();
 		for (int k = 1; k < boneCount - 1; k++)
 		{
 			// Vector from last Base to current Base with the length of the bone
-			Vector2 vec = (jointPos[k] - jointPos[k - 1]).normalize() * node->length();
+			Vector2 vec = (jointPos[k] - jointPos[k - 1]).normalize() * node->length;
 			jointPos[k] = jointPos[k - 1] + vec; 
 
-			node = node->child();
+			node = node->child;
 		}
 
 		// Rotate Bones in the Skeleton
@@ -59,14 +59,15 @@ bool FABRIK::solve(int maxIterations, float epsilon)
 			Vector2 vec = (jointPos[l] - jointPos[l - 1]).normalize();
 			// Angle between last bone and current bone
 			float rotateAngle = acos(lastVec.dot(vec)) * 180.0f / std::numbers::pi;
-			node->setAngle(rotateAngle);
+			node->angle = rotateAngle;
 
 			lastVec = vec;
-			node = node->child();
+			node = node->child;
 		}
 
 		// Return if Pivot is near enougth to the Target
-		if ((m_targetPos - m_skeleton->pivotPosition()).length() < epsilon) return true;
+		if ((m_targetPos - m_skeleton->pivotPosition()).length() < epsilon) 
+			return true;
 	}
 
 	// Algorithm finished by reaching maxIter -> pivot not near enough to the target
