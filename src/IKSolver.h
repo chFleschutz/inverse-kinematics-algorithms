@@ -8,20 +8,14 @@
 class IKSolver
 {
 public:
-	/// @brief Creates a solver for the Cyclic Coordinated Descend (CCD) algorithm
-	/// @param skeleton Pointer to the skeleton which should be manipulated
-	/// @param target Desired target position of the end effector
-	IKSolver(Skeleton* skeleton, const Vector2& target = Vector2(0.0f, 0.0f))
-		: m_skeleton(skeleton), m_targetPos(target) {}
-
-	/// @brief Set a new target position for the end effector
-	/// @param targetPos New target position
-	void setTargetPosition(const Vector2& targetPos) { m_targetPos = targetPos; }
+	IKSolver() = default;
+	virtual ~IKSolver() = default;
 
 	/// @brief Interface to solve the inverse kinematics problem
-	virtual bool solve(int maxItererations, float epsilon) = 0;
-
-protected:
-	Skeleton* m_skeleton;
-	Vector2 m_targetPos;
+	/// @param skeleton The skeleton to solve
+	/// @param targetPos The target position to reach
+	/// @param maxIterations The maximum number of iterations to solve the problem
+	/// @param epsilon The maximum deviation from the target position
+	/// @return Returns true if the end effector is within epsilon from the target before max iterations are reached else returns false
+	virtual bool solve(Skeleton& skeleton, const Vector2& targetPos, int maxIterations, float epsilon) = 0;
 };

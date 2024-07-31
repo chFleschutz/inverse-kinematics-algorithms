@@ -4,6 +4,7 @@
 
 #include <vector>
 
+
 /// @brief Represents a bone in a skeleton
 struct Bone
 {
@@ -13,7 +14,7 @@ struct Bone
 	float angle = 0.0f;
 };
 
-/// @brief Represents a skeletal structure composed of a chain of bones
+/// @brief A simple skeletal structure composed of a chain of bones
 class Skeleton
 {
 public:

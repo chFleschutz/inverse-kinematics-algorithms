@@ -1,7 +1,7 @@
 #include "Skeleton.h"
 
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 
 Skeleton& Skeleton::addBone(float length, float angle)
 {
@@ -32,11 +32,9 @@ Vector2 Skeleton::boneBasePosition(Bone* node)
 		basePosition += Vector2::makeVector(currentBone->length, currentAngle);
 		currentBone = currentBone->child;
 	}
-
 	return basePosition;
 }
 
-// Calculates the Pivot Position by iterating trought Nodes and adding their lengths 
 Vector2 Skeleton::pivotPosition()
 {
 	auto currentBone = m_root;
@@ -48,7 +46,6 @@ Vector2 Skeleton::pivotPosition()
 		pivotPos += Vector2::makeVector(currentBone->length, currentAngle);
 		currentBone = currentBone->child;
 	}
-
 	return pivotPos;
 }
 

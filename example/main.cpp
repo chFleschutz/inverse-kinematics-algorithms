@@ -23,8 +23,9 @@ int main()
 
 	// Inverse kinematics solver (use CDD / FABRIK)
 	std::cout << "<< SOLVING IK >> \n";
-	auto ikSolver = CCD(&skeleton, targetPos);
-	auto result = ikSolver.solve(10, 0.01f);
+	//FABRIK ikSolver;
+	CCD ikSolver;
+	auto result = ikSolver.solve(skeleton, targetPos, 10, 0.01f);
 
 	if (result)
 		std::cout << "IK successful" << std::endl << std::endl;

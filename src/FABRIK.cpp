@@ -1,22 +1,17 @@
 #include "FABRIK.h"
 
-#include <vector>
 #include <numbers>
+#include <vector>
 
 
-FABRIK::FABRIK(Skeleton* skeleton, const Vector2& target) : IKSolver(skeleton, target)
+bool FABRIK::solve(Skeleton& skeleton, const Vector2& targetPos, int maxIterations, float epsilon)
 {
-}
-
-bool FABRIK::solve(int maxIterations, float epsilon)
-{
-	Bone* node;
-	auto boneCount = m_skeleton->numOfBones();
+	auto boneCount = skeleton.numOfBones();
 	std::vector<Vector2> jointPos(boneCount + 1);
 
 	// Save Joint Positions
-	node = m_skeleton->rootBone();
-	jointPos[0] = m_skeleton->position();
+	Bone* node = skeleton.rootBone();
+	jointPos[0] = skeleton.position();
 	for (int i = 1; i < boneCount + 1; i++)
 	{
 		jointPos[i] = jointPos[i - 1] + Vector2::makeVector(node->length, node->angle);
@@ -26,21 +21,19 @@ bool FABRIK::solve(int maxIterations, float epsilon)
 	for (int i = 0; i < maxIterations; i++)
 	{
 		// Forward Reaching Inverse Kinematik
-		node = m_skeleton->pivotBone();
-		jointPos[boneCount] = m_targetPos;
+		node = skeleton.pivotBone();
+		jointPos[boneCount] = targetPos;
 		for (size_t j = boneCount - 1; j > 0; j--)
 		{
 			// Vector from last base to current Base with the length of the bone
 			Vector2 vec = (jointPos[j] - jointPos[j + 1]).normalize() * node->length;
-			// Set the joint Pos
 			jointPos[j] = jointPos[j + 1] + vec;
-			// Set Node to the previous Bone
 			node = node->parent;
 		}
 
 		// Backward Reaching Inverse Kinematik
-		node = m_skeleton->rootBone();
-		jointPos[0] = m_skeleton->position();
+		node = skeleton.rootBone();
+		jointPos[0] = skeleton.position();
 		for (int k = 1; k < boneCount - 1; k++)
 		{
 			// Vector from last Base to current Base with the length of the bone
@@ -51,13 +44,11 @@ bool FABRIK::solve(int maxIterations, float epsilon)
 		}
 
 		// Rotate Bones in the Skeleton
-		node = m_skeleton->rootBone();
+		node = skeleton.rootBone();
 		Vector2 lastVec = Vector2(1, 0);
 		for (int l = 1; l < boneCount + 1; l++)
 		{
-			// Vector which represents the Bone direction
 			Vector2 vec = (jointPos[l] - jointPos[l - 1]).normalize();
-			// Angle between last bone and current bone
 			float rotateAngle = acos(lastVec.dot(vec)) * 180.0f / std::numbers::pi_v<float>;
 			node->angle = rotateAngle;
 
@@ -66,10 +57,10 @@ bool FABRIK::solve(int maxIterations, float epsilon)
 		}
 
 		// Return if Pivot is near enougth to the Target
-		if ((m_targetPos - m_skeleton->pivotPosition()).length() < epsilon) 
+		if ((targetPos - skeleton.pivotPosition()).length() < epsilon)
 			return true;
 	}
 
-	// Algorithm finished by reaching maxIter -> pivot not near enough to the target
+	// Algorithm finished by reaching max Iterations -> pivot is not near enough to the target
 	return false;
 }

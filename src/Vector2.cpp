@@ -1,8 +1,8 @@
 #include "Vector2.h"
 
 #include <cmath>
-#include <numbers>
 #include <iomanip>
+#include <numbers>
 
 Vector2& Vector2::normalize() 
 {
