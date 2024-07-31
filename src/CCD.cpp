@@ -2,7 +2,7 @@
 
 #include <numbers>
 
-CCD::CCD(Skeleton* skeleton, const Vector2& target) : InverseKinematicsSolver(skeleton, target)
+CCD::CCD(Skeleton* skeleton, const Vector2& target) : IKSolver(skeleton, target)
 {
 }
 
@@ -34,7 +34,7 @@ bool CCD::solve(const int maxIter, const float eps)
 			Vector2 baseTargetVec = (m_targetPos - currrentBasePos).normalize();
 
 			// Angle between BasePivotVec and BaseTargetVec
-			float rotateAngle = acos(basePivotVec.dot(baseTargetVec)) * 180.0f / std::numbers::pi;
+			float rotateAngle = acos(basePivotVec.dot(baseTargetVec)) * 180.0f / std::numbers::pi_v<float>;
 			if (basePivotVec.cross(baseTargetVec) < 0.0f) rotateAngle *= -1.0f;
 
 			// Rotate Bone in direction of the Pivot

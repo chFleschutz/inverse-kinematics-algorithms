@@ -4,14 +4,14 @@
 #include <numbers>
 
 
-FABRIK::FABRIK(Skeleton* skeleton, const Vector2& target) : InverseKinematicsSolver(skeleton, target)
+FABRIK::FABRIK(Skeleton* skeleton, const Vector2& target) : IKSolver(skeleton, target)
 {
 }
 
 bool FABRIK::solve(int maxIterations, float epsilon)
 {
 	Bone* node;
-	const int boneCount = m_skeleton->numOfBones();
+	auto boneCount = m_skeleton->numOfBones();
 	std::vector<Vector2> jointPos(boneCount + 1);
 
 	// Save Joint Positions
@@ -28,7 +28,7 @@ bool FABRIK::solve(int maxIterations, float epsilon)
 		// Forward Reaching Inverse Kinematik
 		node = m_skeleton->pivotBone();
 		jointPos[boneCount] = m_targetPos;
-		for (int j = boneCount - 1; j > 0; j--)
+		for (size_t j = boneCount - 1; j > 0; j--)
 		{
 			// Vector from last base to current Base with the length of the bone
 			Vector2 vec = (jointPos[j] - jointPos[j + 1]).normalize() * node->length;
@@ -58,7 +58,7 @@ bool FABRIK::solve(int maxIterations, float epsilon)
 			// Vector which represents the Bone direction
 			Vector2 vec = (jointPos[l] - jointPos[l - 1]).normalize();
 			// Angle between last bone and current bone
-			float rotateAngle = acos(lastVec.dot(vec)) * 180.0f / std::numbers::pi;
+			float rotateAngle = acos(lastVec.dot(vec)) * 180.0f / std::numbers::pi_v<float>;
 			node->angle = rotateAngle;
 
 			lastVec = vec;

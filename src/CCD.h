@@ -1,11 +1,11 @@
 #pragma once
 
-#include "InverseKinematicsSolver.h"
+#include "IKSolver.h"
 #include "Skeleton.h"
 #include "Vector2.h"
 
 /// @brief Implementation of the Cyclic Coordinated Descend (CCD) algorithm
-class CCD : public InverseKinematicsSolver
+class CCD : public IKSolver
 {
 public:
 	/// @brief Creates a solver for the Cyclic Coordinated Descend (CCD) algorithm

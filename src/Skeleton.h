@@ -39,7 +39,7 @@ public:
 	Vector2 pivotPosition();
 
 	/// @brief Returns the count of bones
-	int numOfBones() { return m_bones.size(); }
+	size_t numOfBones() { return m_bones.size(); }
 
 	/// @brief Prints each bone of the skeleton with its angle and length to the console
 	void print();

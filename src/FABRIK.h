@@ -1,11 +1,11 @@
 #pragma once
 
-#include "InverseKinematicsSolver.h"
+#include "IKSolver.h"
 #include "Skeleton.h"
 #include "Vector2.h"
 
 /// @brief Implementation of the Forward And Backward Reaching Inverse Kinematics (FABRIK) algorithm
-class FABRIK : public InverseKinematicsSolver
+class FABRIK : public IKSolver
 {
 public:
 	/// @brief Creates a solver for the Forward And Backward Reaching Inverse Kinematics (FABRIK) algorithm

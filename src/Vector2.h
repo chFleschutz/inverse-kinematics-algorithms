@@ -48,6 +48,7 @@ public:
 
 	/// @brief Prints the Vector2D to the console formated like this ( x, y )
 	friend std::ostream& operator<<(std::ostream& os, Vector2& other);
+	friend std::ostream& operator<<(std::ostream& os, Vector2&& other);
 
 private:
 	float m_x = 0.0f;

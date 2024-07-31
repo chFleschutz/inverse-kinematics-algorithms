@@ -19,8 +19,8 @@ void Vector2::print() const
 
 Vector2 Vector2::makeVector(float length, float rotation)
 {
-	float x = length * cos(rotation * std::numbers::pi / 180.f);
-	float y = length * sin(rotation * std::numbers::pi / 180.f);
+	float x = length * cos(rotation * std::numbers::pi_v<float> / 180.f);
+	float y = length * sin(rotation * std::numbers::pi_v<float> / 180.f);
 	return Vector2(x, y);
 }
 
@@ -44,6 +44,11 @@ Vector2& Vector2::operator-=(Vector2 other)
 }
 
 std::ostream& operator<<(std::ostream& os, Vector2& other)
+{
+	return os << std::fixed << std::setprecision(3) << "( " << other.x() << ", " << other.y() << " )";
+}
+
+std::ostream& operator<<(std::ostream& os, Vector2&& other)
 {
 	return os << std::fixed << std::setprecision(3) << "( " << other.x() << ", " << other.y() << " )";
 }
