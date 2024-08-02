@@ -1,13 +1,13 @@
 # Inverse Kinematics Algorithms: CCD and FABRIK
-This repository contains two popular Inverse Kinematics (IK) algorithms: **Cyclic Coordinate Descent (CCD)** and **Forward and Backward Reaching Inverse Kinematics (FABRIK)**. These algorithms are commonly used in robotics, computer graphics, and animation to solve the problem of positioning an end effector (such as a robotic arm or a character's limb) in a desired position by manipulating its joints.
+This repository contains two popular Inverse Kinematics (IK) algorithms: **Cyclic Coordinate Descent (CCD)** and **Forward and Backward Reaching Inverse Kinematics (FABRIK)**. These algorithms are commonly used in robotics, computer graphics and animation to solve the problem of positioning an end effector (such as a robotic arm or a character's limb) in a desired position by manipulating its joint angles.
 
 ## Introduction
 
 Inverse Kinematics is an essential concept in robotics and animation. The algorithms in this repository offer solutions for solving IK problems.
 
-- **CCD (Cyclic Coordinate Descent)**: This algorithm iteratively adjusts each joint angle in a chain of joints to minimize the difference between the current end effector position and the desired position.
+- **CCD (Cyclic Coordinate Descent)**: This algorithm iteratively adjusts each joint angle to minimize the difference between the current end effector position and the desired position.
 
-- **FABRIK (Forward and Backward Reaching Inverse Kinematics)**: FABRIK is an iterative method that works by iteratively adjusting the positions of joints along a chain to reach a desired target.
+- **FABRIK (Forward and Backward Reaching Inverse Kinematics)**: FABRIK works by iteratively adjusting the positions of joints along the chain to reach the desired target.
 
 
 ## Getting Started
@@ -21,7 +21,7 @@ git clone https://github.com/chFleschutz/inverse-kinematics-algorithms.git
 
 3. Generate the project files or open the folder directly in your IDE (if it supports CMake)
 
-4. Build the project and run the `IKExample`
+4. Build the project and run the `IKExample` for a small demo
 
 
 ### Using the library
