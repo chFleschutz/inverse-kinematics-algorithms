@@ -5,7 +5,6 @@
 
 int main()
 {
-	// Input
 	Vector2 targetPos(1.0f, 1.0f);
 
 	Skeleton skeleton;
@@ -14,33 +13,32 @@ int main()
 	skeleton.addBone(1.0f, radians(30.0f));
 
 	// Print input
-	std::cout << "<< INPUT >> \n";
-	std::cout << "Starting Skeleton: " "\n";
+	std::cout << "<< INPUT >> \n"
+		<< "Targetposition: " << targetPos << "\n"
+		<< "Pivotposition:  " << skeleton.pivotPosition() << "\n"
+		<< "Starting Skeleton:\n";
 	skeleton.print();
-	std::cout << "Pivotposition:  " << skeleton.pivotPosition() << "\n";
-	std::cout << "Targetposition: " << targetPos << "\n\n";
 
-
-	// Inverse kinematics solver (use CDD / FABRIK)
+	// Solve IK
 	std::cout << "<< SOLVING IK >> \n";
-	//FABRIK ikSolver;
-	CCD ikSolver;
-	auto result = ikSolver.solve(skeleton, targetPos, 10, 0.1f);
+
+	//FABRIK solver;
+	CCD solver;
+	auto result = solver.solve(skeleton, targetPos, 10, 0.1f);
 
 	if (result)
-		std::cout << "IK successful" << std::endl << std::endl;
+		std::cout << "IK successful\n\n";
 	else
-		std::cout << "IK failure" << std::endl << std::endl;
-
+		std::cout << "IK failure\n\n";
 
 	// Print results
 	auto pivot = skeleton.pivotPosition();
 	auto deviation = (targetPos - pivot).length();
 
-	std::cout << "<< OUTPUT >> \n";
-	std::cout << "Resulting Skeleton: " << "\n";
+	std::cout << "<< OUTPUT >> \n"
+		<< "Pivotposition:   " << pivot << "\n"
+		<< "Targetposition:  " << targetPos << "\n"
+		<< "Targetdeviation: " << deviation << "\n"
+		<< "Resulting Skeleton: " << "\n";
 	skeleton.print();
-	std::cout << "Pivotposition:   " << pivot << "\n";
-	std::cout << "Targetposition:  " << targetPos << "\n";
-	std::cout << "Targetdeviation: " << deviation << "\n";
 }
