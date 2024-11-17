@@ -1,14 +1,31 @@
 # Inverse Kinematics Algorithms: CCD and FABRIK
-This repository contains two popular Inverse Kinematics (IK) algorithms: **Cyclic Coordinate Descent (CCD)** and **Forward and Backward Reaching Inverse Kinematics (FABRIK)**. These algorithms are commonly used in robotics, computer graphics and animation to solve the problem of positioning an end effector (such as a robotic arm or a character's limb) in a desired position by manipulating its joint angles.
+
+This repository showcases the implementation of two popular Inverse Kinematics (IK) algorithms: **Cyclic Coordinate Descent (CCD)** and **Forward and Backward Reaching Inverse Kinematics (FABRIK)**. These algorithms are commonly used in robotics, computer graphics and animation to solve the problem of positioning an end-effector (such as a robotic arm or a character's foot) at a desired location by manipulating its joint angles.
+
 
 ## Introduction
 
-Inverse Kinematics is an essential concept in robotics and animation. The algorithms in this repository offer solutions for solving IK problems.
+Inverse Kinematics algorithms iteratively adjust joint angles in a chain of bones to minimize the distance between the end-effector's current position and the target. Both the CCD and FABRIK algorithms support variable-length bone chains and use iterative methods. As a result, they may fail if the target remains unreachable after n iterations.
 
-- **CCD (Cyclic Coordinate Descent)**: This algorithm iteratively adjusts each joint angle to minimize the difference between the current end effector position and the desired position.
+The two algorithms use different approaches on solving IK:
 
-- **FABRIK (Forward and Backward Reaching Inverse Kinematics)**: FABRIK works by iteratively adjusting the positions of joints along the chain to reach the desired target.
+### CCD (Cyclic Coordinate Descent)
 
+- CCD iteratively adjusts each joint starting from the pivot and working backward towards the root. At each step, it modifies the angle of the current joint to minimize the distance between the end-effector and the target position.
+
+- Implementation: [src/CCD.h](https://github.com/chFleschutz/inverse-kinematics-algorithms/blob/main/src/CCD.h)
+
+### FABRIK (Forward and Backward Reaching Inverse Kinematics)
+
+- FABRIK works by saving all joint-positions in a list and iteratively updating these in two passes:
+  
+  Forward Pass: The end-effector is moved to the target position, and each joint is adjusted to ensure it remains within reach of the connecting bone.
+
+  Backward Pass: The root bone is placed back in the origin and each joint position is readjusted accordingly.
+  
+  After the positions are updated, the joint angles are calculated based of the new joint positions.
+
+- Implementation: [src/FABRIK.h](https://github.com/chFleschutz/inverse-kinematics-algorithms/blob/main/src/FABRIK.h)
 
 ## Getting Started
 
@@ -21,24 +38,7 @@ git clone https://github.com/chFleschutz/inverse-kinematics-algorithms.git
 
 3. Generate the project files or open the folder directly in your IDE (if it supports CMake)
 
-4. Build the project and run the `IKExample` for a small demo
-
-
-### Using the library
-
-The project builds as a static library. To use it in another project:
-
-1. Include the directory in your CMakeLists.txt file
-  ```cmake
-  add_subdirectory(path/to/inverse-kinematics-algorithms)
-  ```
-
-2. Link the library
-  ```cmake
-  target_link_libraries(your_target PRIVATE ik-algorithms)
-  ```
-
-3. Optionally you can disable building the example project by setting `BUILD_EXAMPLE` to `OFF`
+4. Build the project and run the `ik-algorithms-example` for a small demo
 
 
 ## Code Usage
@@ -56,19 +56,16 @@ To use the CCD / FABRIK algorithm, follow these steps:
 
 ```cpp
 Skeleton skeleton;
-skeleton.addBone(1.5f, 30.0f);
-skeleton.addBone(1.0f, 30.0f);
-skeleton.addBone(1.0f, 30.0f);
+skeleton.addBone(1.5f, radians(30.0f));
+skeleton.addBone(1.0f, radians(30.0f));
+skeleton.addBone(1.0f, radians(30.0f));
 ```
 
-4. Create an IKSolver and call the `solve` method to compute the new joint angles for the skeleton. 
+4. Create an `IKSolver` and call the `solve` method to compute the new joint angles for the skeleton. 
   
 ```cpp
-CCD ikSolver;
-ikSolver.solve(skeleton, targetPosition, maxIterations, 0.01f);
+CCD solver;
+solver.solve(skeleton, targetPosition, maxIterations, 0.01f);
 ```
-   
-6. Use the updated joint angles to control your robotic arm or animation rig.
 
-
-For a concrete example, check the [example-folder](example/) in the repo. The example demonstrates the setup and usage of the CCD and FABRIK algorithms.
+Check the [example-folder](example/) for a demonstration of the CCD and FABRIK algorithms.
