@@ -2,6 +2,17 @@
 
 #include <iostream>
 
+#include <cmath>
+#include <numbers>
+
+/// @brief Converts a value from radians to degrees
+template <typename T>
+constexpr T degrees(T value) { return value * 180.0f / std::numbers::pi_v<T>; }
+
+/// @brief Converts a value from degrees to radians
+template <typename T>
+constexpr T radians(T value) { return value * std::numbers::pi_v<T> / 180.0f; }
+
 /// @brief Small convenient helper class representing a two-dimensional vector
 class Vector2 
 {

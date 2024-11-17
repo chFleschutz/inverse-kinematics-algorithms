@@ -26,7 +26,7 @@ public:
 
 				float dot = basePivotVec.dot(baseTargetVec);
 				float det = basePivotVec.cross(baseTargetVec);
-				float rotateAngle = atan2(det, dot) * 180.0f / std::numbers::pi_v<float>;
+				float rotateAngle = atan2(det, dot);
 
 				node->angle = node->angle + rotateAngle;
 				node = node->parent;

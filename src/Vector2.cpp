@@ -1,8 +1,6 @@
 #include "Vector2.h"
 
-#include <cmath>
 #include <iomanip>
-#include <numbers>
 
 Vector2& Vector2::normalize() 
 {
@@ -19,9 +17,7 @@ void Vector2::print() const
 
 Vector2 Vector2::makeVector(float length, float rotation)
 {
-	float x = length * cos(rotation * std::numbers::pi_v<float> / 180.f);
-	float y = length * sin(rotation * std::numbers::pi_v<float> / 180.f);
-	return Vector2(x, y);
+	return Vector2(length * cos(rotation), length * sin(rotation));
 }
 
 float Vector2::length() const

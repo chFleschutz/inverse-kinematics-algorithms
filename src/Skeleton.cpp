@@ -2,6 +2,7 @@
 
 #include <iomanip>
 #include <iostream>
+#include <numbers>
 
 Skeleton& Skeleton::addBone(float length, float angle)
 {
@@ -55,7 +56,8 @@ void Skeleton::print()
 	auto bone = m_root;
 	while (bone != nullptr)
 	{
-		std::cout << std::setprecision(3) << std::fixed << "\tangle:  " << bone->angle << ", length: " << bone->length << "\n";
+		std::cout << std::setprecision(3) << std::fixed 
+			<< "\tangle:  " << degrees(bone->angle) << ", length: " << bone->length << "\n";
 
 		bone = bone->child;
 		indentation += 5;

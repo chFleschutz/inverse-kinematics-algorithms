@@ -52,7 +52,7 @@ public:
 			for (int l = 1; l < boneCount + 1; l++)
 			{
 				Vector2 vec = (jointPos[l] - jointPos[l - 1]).normalize();
-				float rotateAngle = acos(lastVec.dot(vec)) * 180.0f / std::numbers::pi_v<float>;
+				float rotateAngle = acos(lastVec.dot(vec));
 				node->angle = rotateAngle;
 
 				lastVec = vec;

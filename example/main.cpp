@@ -9,9 +9,9 @@ int main()
 	Vector2 targetPos(1.0f, 1.0f);
 
 	Skeleton skeleton;
-	skeleton.addBone(1.5f, 30.0f);
-	skeleton.addBone(1.0f, 30.0f);
-	skeleton.addBone(1.0f, 30.0f);
+	skeleton.addBone(1.5f, radians(30.0f));
+	skeleton.addBone(1.0f, radians(30.0f));
+	skeleton.addBone(1.0f, radians(30.0f));
 
 	// Print input
 	std::cout << "<< INPUT >> \n";
