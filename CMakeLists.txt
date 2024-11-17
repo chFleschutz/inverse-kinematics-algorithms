@@ -1,17 +1,22 @@
 cmake_minimum_required(VERSION 3.12)
 
-project(IKSolverProject)
+project(ik-algorithms)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-file(GLOB_RECURSE HEADERS src/*.h)
-file(GLOB_RECURSE SOURCES src/*.cpp)
+set(SRC
+	"src/CCD.h"
+	"src/FABRIK.h"
+	"src/IKSolver.h"
+	"src/Skeleton.h"
+	"src/Skeleton.cpp"
+	"src/Vector2.h"
+	"src/Vector2.cpp"
+)
 
+add_library(ik-algorithms STATIC ${SRC})
 include_directories(${PROJECT_SOURCE_DIR}/src)
-
-add_library(ik-algorithms STATIC ${HEADERS} ${SOURCES})
-
 
 # Optional Example Project
 option(BUILD_EXAMPLE "Build the example project" ON)
