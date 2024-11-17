@@ -3,6 +3,7 @@
 #include "IKSolver.h"
 
 #include <numbers>
+#include <cmath>
 
 /// @brief Implementation of the Cyclic Coordinated Descend (CCD) algorithm for solving inverse kinematics
 class CCD : public IKSolver
@@ -23,8 +24,9 @@ public:
 				Vector2 basePivotVec = (pivotPos - currrentBasePos).normalize();
 				Vector2 baseTargetVec = (targetPos - currrentBasePos).normalize();
 
-				float rotateAngle = acos(basePivotVec.dot(baseTargetVec)) * 180.0f / std::numbers::pi_v<float>;
-				if (basePivotVec.cross(baseTargetVec) < 0.0f) rotateAngle *= -1.0f;
+				float dot = basePivotVec.dot(baseTargetVec);
+				float det = basePivotVec.cross(baseTargetVec);
+				float rotateAngle = atan2(det, dot) * 180.0f / std::numbers::pi_v<float>;
 
 				node->angle = node->angle + rotateAngle;
 				node = node->parent;
