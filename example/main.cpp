@@ -25,7 +25,7 @@ int main()
 	std::cout << "<< SOLVING IK >> \n";
 	//FABRIK ikSolver;
 	CCD ikSolver;
-	auto result = ikSolver.solve(skeleton, targetPos, 10, 0.01f);
+	auto result = ikSolver.solve(skeleton, targetPos, 10, 0.1f);
 
 	if (result)
 		std::cout << "IK successful" << std::endl << std::endl;
