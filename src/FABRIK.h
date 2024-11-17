@@ -14,7 +14,7 @@ public:
 
 		// Save Joint Positions
 		Bone* node = skeleton.rootBone();
-		jointPos[0] = skeleton.position();
+		jointPos[0] = Vector2(0.0f, 0.0f);
 		for (int i = 1; i < boneCount + 1; i++)
 		{
 			jointPos[i] = jointPos[i - 1] + Vector2::makeVector(node->length, node->angle);
@@ -36,7 +36,7 @@ public:
 
 			// Backward Reaching Inverse Kinematik
 			node = skeleton.rootBone();
-			jointPos[0] = skeleton.position();
+			jointPos[0] = Vector2(0.0f, 0.0f);
 			for (int k = 1; k < boneCount - 1; k++)
 			{
 				// Vector from last Base to current Base with the length of the bone

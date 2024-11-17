@@ -19,7 +19,6 @@ class Skeleton
 {
 public:
 	Skeleton() = default;
-	Skeleton(Vector2 position) : m_position(position) {}
 	~Skeleton() = default;
 
 	/// @brief Adds a bone at the end of the skeleton chain
@@ -29,9 +28,6 @@ public:
 	Bone* rootBone() { return m_root; }
 	/// @brief Returns the last bone in the skeleton chain at the pivot
 	Bone* pivotBone() { return m_pivot; }
-
-	/// @brief Returns the root positon
-	Vector2 position() const { return m_position; }
 
 	/// @brief Returns the position at the base of bone
 	Vector2 boneBasePosition(Bone* bone);
@@ -46,7 +42,6 @@ public:
 	void print();
 
 private:
-	Vector2 m_position;
 	Bone* m_root = nullptr;
 	Bone* m_pivot = nullptr;
 	std::vector<std::unique_ptr<Bone>> m_bones;

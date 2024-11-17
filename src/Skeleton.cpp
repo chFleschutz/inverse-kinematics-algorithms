@@ -26,7 +26,7 @@ Vector2 Skeleton::boneBasePosition(Bone* node)
 {
 	auto currentBone = m_root;
 	float currentAngle = 0.0f;
-	Vector2 basePosition = m_position;
+	Vector2 basePosition{};
 	while (currentBone != node && currentBone != nullptr)
 	{
 		currentAngle += currentBone->angle;
@@ -40,7 +40,7 @@ Vector2 Skeleton::pivotPosition()
 {
 	auto currentBone = m_root;
 	float currentAngle = 0.0f;
-	Vector2 pivotPos = m_position;
+	Vector2 pivotPos{};
 	while (currentBone != nullptr)
 	{
 		currentAngle += currentBone->angle;
