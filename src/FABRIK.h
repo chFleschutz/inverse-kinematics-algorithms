@@ -12,10 +12,9 @@ public:
 		auto boneCount = skeleton.numOfBones();
 		std::vector<Vector2> jointPos(boneCount + 1);
 
-		// Save Joint Positions
+		// Save positions of each joint in the skeleton
 		Bone* node = skeleton.rootBone();
-		jointPos[0] = Vector2(0.0f, 0.0f);
-		for (int i = 1; i < boneCount + 1; i++)
+		for (size_t i = 1; i < boneCount + 1; i++)
 		{
 			jointPos[i] = jointPos[i - 1] + Vector2::makeVector(node->length, node->angle);
 			node = node->child;
@@ -28,44 +27,41 @@ public:
 			jointPos[boneCount] = targetPos;
 			for (size_t j = boneCount - 1; j > 0; j--)
 			{
-				// Vector from last base to current Base with the length of the bone
-				Vector2 vec = (jointPos[j] - jointPos[j + 1]).normalize() * node->length;
-				jointPos[j] = jointPos[j + 1] + vec;
+				// Vector from next joint to current joint
+				Vector2 vec = (jointPos[j] - jointPos[j + 1]).normalize();
+				jointPos[j] = jointPos[j + 1] + (vec * node->length);
 				node = node->parent;
 			}
 
 			// Backward Reaching Inverse Kinematik
 			node = skeleton.rootBone();
 			jointPos[0] = Vector2(0.0f, 0.0f);
-			for (int k = 1; k < boneCount - 1; k++)
+			for (size_t k = 1; k < boneCount - 1; k++)
 			{
-				// Vector from last Base to current Base with the length of the bone
-				Vector2 vec = (jointPos[k] - jointPos[k - 1]).normalize() * node->length;
-				jointPos[k] = jointPos[k - 1] + vec;
-
+				// Vector from previous joint to current joint
+				Vector2 vec = (jointPos[k] - jointPos[k - 1]).normalize();
+				jointPos[k] = jointPos[k - 1] + (vec * node->length);
 				node = node->child;
 			}
 
-			// Rotate Bones in the Skeleton
+			// Adjust rotation of each bone in the skeleton based on the new joint positions
 			node = skeleton.rootBone();
-			Vector2 lastVec = Vector2(1, 0);
-			for (int l = 1; l < boneCount + 1; l++)
+			Vector2 lastVec(1.0f, 0.0f);
+			for (size_t l = 1; l < boneCount + 1; l++)
 			{
 				Vector2 vec = (jointPos[l] - jointPos[l - 1]).normalize();
-				float rotateAngle = acos(lastVec.dot(vec));
-				node->angle = rotateAngle;
+				node->angle = acos(lastVec.dot(vec));
 
 				lastVec = vec;
 				node = node->child;
 			}
 
-			// Return if Pivot is near enougth to the Target
+			// Return if Pivot is near enougth to the target
 			if ((targetPos - skeleton.pivotPosition()).length() < epsilon)
 				return true;
 		}
 
-		// Algorithm finished by reaching max Iterations -> pivot is not near enough to the target
+		// Algorithm finished by reaching maxIterations -> pivot is not near enough to the target
 		return false;
 	}
 };
-
