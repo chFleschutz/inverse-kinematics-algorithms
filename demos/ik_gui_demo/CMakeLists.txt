@@ -13,7 +13,10 @@ if (Qt6_FOUND)
         main.cpp
     )
 
-    target_link_libraries(ik-gui-demo PRIVATE Qt6::Widgets)
+    target_link_libraries(ik-gui-demo PRIVATE 
+        Qt6::Widgets
+        ik-algorithms
+    )
 
     set_target_properties(ik-gui-demo PROPERTIES
         WIN32_EXECUTABLE ON

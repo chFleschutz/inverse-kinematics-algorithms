@@ -1,22 +1,152 @@
-<UI version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>IKMainWindowClass</class>
- <widget class="QMainWindow" name="IKMainWindowClass" >
-  <property name="objectName" >
-   <string notr="true">IKMainWindowClass</string>
-  </property>
-  <property name="geometry" >
+ <widget class="QMainWindow" name="IKMainWindowClass">
+  <property name="geometry">
    <rect>
-	<x>0</x>
-	<y>0</y>
-	<width>600</width>
-	<height>400</height>
+    <x>0</x>
+    <y>0</y>
+    <width>724</width>
+    <height>558</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>IKMainWindow</string>
-  </property>  <widget class="QMenuBar" name="menuBar" />  <widget class="QToolBar" name="mainToolBar" />  <widget class="QWidget" name="centralWidget" />  <widget class="QStatusBar" name="statusBar" />
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="2" column="1">
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="0" column="0" rowspan="3">
+     <widget class="QGraphicsView" name="graphicsView"/>
+    </item>
+    <item row="0" column="1">
+     <widget class="QGroupBox" name="ikAlgorithm_groupBox">
+      <property name="title">
+       <string>IK Algorithm</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QRadioButton" name="CCD_radioButton">
+         <property name="text">
+          <string>CCD</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="FABRIK_radioButton">
+         <property name="text">
+          <string>FABRIK</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QGroupBox" name="visualizationGroupBox">
+      <property name="title">
+       <string>Visualization</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0" colspan="2">
+        <widget class="QCheckBox" name="useDelay_checkBox">
+         <property name="text">
+          <string>Use Delay</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QDoubleSpinBox" name="delay_doubleSpinBox"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="delay_label">
+         <property name="text">
+          <string>Delay</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="2">
+        <widget class="QPushButton" name="solve_pushButton">
+         <property name="text">
+          <string>Solve</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>724</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
  </widget>
- <layoutDefault spacing="6" margin="11" />
- <pixmapfunction></pixmapfunction>
- <connections/>
-</UI>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>CCD_radioButton</sender>
+   <signal>clicked()</signal>
+   <receiver>IKMainWindowClass</receiver>
+   <slot>onCCDSelected()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>647</x>
+     <y>90</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>722</x>
+     <y>91</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>FABRIK_radioButton</sender>
+   <signal>clicked()</signal>
+   <receiver>IKMainWindowClass</receiver>
+   <slot>onFABRIKSelected()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>664</x>
+     <y>117</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>721</x>
+     <y>116</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>onCCDSelected()</slot>
+  <slot>onFABRIKSelected()</slot>
+ </slots>
+</ui>
