@@ -27,9 +27,6 @@ public:
 	/// @return A reference to this
 	Vector2& normalize();
 
-	/// @brief Prints the Vector2D to the console formated like this ( x, y )
-	void print() const;
-	
 	/// @brief Creates and returns a Vector2D of length and rotation
 	static Vector2 makeVector(float length, float rotation);
 
@@ -56,10 +53,6 @@ public:
 	Vector2 operator/(float other) const { return Vector2(m_x / other, m_y / other); }
 	/// @brief Multiplies this Vector2D with a float and returns the result
 	Vector2 operator*(float other) const { return Vector2(m_x * other, m_y * other); }
-
-	/// @brief Prints the Vector2D to the console formated like this ( x, y )
-	friend std::ostream& operator<<(std::ostream& os, Vector2& other);
-	friend std::ostream& operator<<(std::ostream& os, Vector2&& other);
 
 private:
 	float m_x = 0.0f;

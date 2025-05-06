@@ -1,8 +1,19 @@
 #include "CCD.h"
 #include "FABRIK.h"
 
-#include <iostream>
 #include <format>
+#include <iomanip>
+#include <iostream>
+
+std::ostream& operator<<(std::ostream& os, Vector2& other)
+{
+	return os << std::format("( {:.3f}, {:.3f} )", other.x(), other.y());
+}
+
+std::ostream& operator<<(std::ostream& os, Vector2&& other)
+{
+	return os << std::format("( {:.3f}, {:.3f} )", other.x(), other.y());
+}
 
 void printSkeleton(const Skeleton& skeleton)
 {
