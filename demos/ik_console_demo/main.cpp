@@ -2,6 +2,15 @@
 #include "FABRIK.h"
 
 #include <iostream>
+#include <format>
+
+void printSkeleton(const Skeleton& skeleton)
+{
+	for (const auto& bone : skeleton.bones())
+	{
+		std::cout << std::format("\tangle: {:>6.2f}, length: {:>6.2f}\n", degrees(bone.angle), bone.length);
+	}
+}
 
 int main()
 {
@@ -15,30 +24,25 @@ int main()
 	// Print input
 	std::cout << "<< INPUT >> \n"
 		<< "Targetposition: " << targetPos << "\n"
-		<< "Pivotposition:  " << skeleton.pivotPosition() << "\n"
+		<< "Pivotposition:  " << skeleton.computePivotPosition() << "\n"
 		<< "Starting Skeleton:\n";
-	skeleton.print();
+	printSkeleton(skeleton);
 
 	// Solve IK
-	std::cout << "<< SOLVING IK >> \n";
+	std::cout << "\n<< SOLVING IK >> \n";
 
-	//FABRIK solver;
-	CCD solver;
-	auto result = solver.solve(skeleton, targetPos, 10, 0.1f);
-
-	if (result)
-		std::cout << "IK successful\n\n";
-	else
-		std::cout << "IK failure\n\n";
+	FABRIK solver;
+	//CCD solver;
+	auto success = solver.solve(skeleton, targetPos, 10, 0.1f);
+	std::cout << (success ? "IK successful\n" : "IK failure\n");
 
 	// Print results
-	auto pivot = skeleton.pivotPosition();
+	auto pivot = skeleton.computePivotPosition();
 	auto deviation = (targetPos - pivot).length();
-
-	std::cout << "<< OUTPUT >> \n"
+	std::cout << "\n<< OUTPUT >> \n"
 		<< "Pivotposition:   " << pivot << "\n"
 		<< "Targetposition:  " << targetPos << "\n"
 		<< "Targetdeviation: " << deviation << "\n"
 		<< "Resulting Skeleton: " << "\n";
-	skeleton.print();
+	printSkeleton(skeleton);
 }

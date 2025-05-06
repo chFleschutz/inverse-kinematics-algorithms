@@ -4,6 +4,7 @@
 
 #include <numbers>
 #include <cmath>
+#include <ranges>
 
 /// @brief Implementation of the Cyclic Coordinated Descend (CCD) algorithm for solving inverse kinematics
 class CCD : public IKSolver
@@ -14,26 +15,23 @@ public:
 	{
 		for (int i = 0; i < maxIterations; i++)
 		{
-			Bone* node = skeleton.pivotBone();
-
 			// Adjust rotation of each bone in the skeleton
-			while (node != nullptr)
+			std::vector<Vector2> jointPositions = skeleton.computeJointPositions();
+			for (size_t i = jointPositions.size() - 1; i > 0; i--)
 			{
-				Vector2 pivotPos = skeleton.pivotPosition();
-				Vector2 currrentBasePos = skeleton.boneBasePosition(node);
-				Vector2 basePivotVec = (pivotPos - currrentBasePos).normalize();
-				Vector2 baseTargetVec = (targetPos - currrentBasePos).normalize();
-
+				Vector2 pivotPos = jointPositions.back();
+				Vector2 currentBasePos = jointPositions[i - 1];
+				Vector2 basePivotVec = (pivotPos - currentBasePos).normalize();
+				Vector2 baseTargetVec = (targetPos - currentBasePos).normalize();
 				float dot = basePivotVec.dot(baseTargetVec);
 				float det = basePivotVec.cross(baseTargetVec);
 				float rotateAngle = atan2(det, dot);
 
-				node->angle = node->angle + rotateAngle;
-				node = node->parent;
+				skeleton.bone(BoneHandle{ i - 1 }).angle += rotateAngle;
 			}
 
 			// Return if pivot is near enought to the target -> success
-			if ((targetPos - skeleton.pivotPosition()).length() < epsilon)
+			if ((targetPos - skeleton.computePivotPosition()).length() < epsilon)
 				return true;
 		}
 

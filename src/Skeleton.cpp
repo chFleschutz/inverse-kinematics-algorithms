@@ -1,66 +1,53 @@
 #include "Skeleton.h"
 
-#include <iomanip>
-#include <iostream>
-#include <numbers>
-
-Skeleton& Skeleton::addBone(float length, float angle)
+void Skeleton::addBone(float length, float angle)
 {
-	m_bones.emplace_back(std::make_unique<Bone>(m_pivot, nullptr, length, angle));
-	auto bone = m_bones.back().get();
-	if (m_root == nullptr)
+	BoneHandle parent;
+	if (!m_bones.empty())
 	{
-		m_root = bone;
-		m_pivot = bone;
-	}
-	else
-	{
-		m_pivot->child = bone;
-		m_pivot = bone;
+		parent = BoneHandle{ static_cast<uint32_t>(m_bones.size() - 1) };
 	}
 
-	return *this;
+	m_bones.emplace_back(parent, BoneHandle{}, length, angle);
 }
 
-Vector2 Skeleton::boneBasePosition(Bone* node)
+auto Skeleton::computeBoneBasePosition(BoneHandle handle) -> Vector2
 {
-	auto currentBone = m_root;
-	float currentAngle = 0.0f;
-	Vector2 basePosition{};
-	while (currentBone != node && currentBone != nullptr)
+	Vector2 basePosition;
+	for (const auto& bone : m_bones)
 	{
-		currentAngle += currentBone->angle;
-		basePosition += Vector2::makeVector(currentBone->length, currentAngle);
-		currentBone = currentBone->child;
+		basePosition += Vector2::makeVector(bone.length, bone.angle);
+
+		if (bone.parent == handle)
+			break;
 	}
 	return basePosition;
 }
 
-Vector2 Skeleton::pivotPosition()
+auto Skeleton::computePivotPosition() -> Vector2
 {
-	auto currentBone = m_root;
+	Vector2 pivotPos;
 	float currentAngle = 0.0f;
-	Vector2 pivotPos{};
-	while (currentBone != nullptr)
+	for (const auto& bone : m_bones)
 	{
-		currentAngle += currentBone->angle;
-		pivotPos += Vector2::makeVector(currentBone->length, currentAngle);
-		currentBone = currentBone->child;
+		currentAngle += bone.angle;
+		pivotPos += Vector2::makeVector(bone.length, currentAngle);
 	}
 	return pivotPos;
 }
 
-void Skeleton::print()
+auto Skeleton::computeJointPositions() -> std::vector<Vector2>
 {
-	int indentation = 10;
-	auto bone = m_root;
-	while (bone != nullptr)
+	std::vector<Vector2> jointPositions;
+	jointPositions.reserve(m_bones.size() + 1);
+	jointPositions.emplace_back(0.0f, 0.0f); // Add the root position
+	float currentAngle = 0.0f;
+	for (const auto& bone : m_bones)
 	{
-		std::cout << std::setprecision(3) << std::fixed 
-			<< "\tangle:  " << degrees(bone->angle) << ", length: " << bone->length << "\n";
-
-		bone = bone->child;
-		indentation += 5;
+		currentAngle += bone.angle;
+		Vector2 basePos = jointPositions.back();
+		Vector2 endPos = basePos + Vector2::makeVector(bone.length, currentAngle);
+		jointPositions.emplace_back(endPos);
 	}
-	std::cout << std::endl;
+	return jointPositions;
 }

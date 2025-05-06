@@ -3,13 +3,25 @@
 #include "Vector2.h"
 
 #include <vector>
+#include <limits>
 
+struct BoneHandle
+{
+	BoneHandle() = default;
+	BoneHandle(uint32_t id) : id(id) {}
+	BoneHandle(size_t id) : id(static_cast<uint32_t>(id)) {}
+
+	uint32_t id{ std::numeric_limits<uint32_t>::max() };
+
+	[[nodiscard]] auto operator==(const BoneHandle& other) const -> bool { return id == other.id; }
+	[[nodiscard]] auto operator!=(const BoneHandle& other) const -> bool { return id != other.id; }
+};
 
 /// @brief Represents a bone in a skeleton
 struct Bone
 {
-	Bone* parent = nullptr;
-	Bone* child = nullptr;
+	BoneHandle parent;
+	BoneHandle child;
 	float length = 1.0f;
 	float angle = 0.0f;
 };
@@ -21,28 +33,17 @@ public:
 	Skeleton() = default;
 	~Skeleton() = default;
 
-	/// @brief Adds a bone at the end of the skeleton chain
-	Skeleton& addBone(float length, float angle);
+	[[nodiscard]] auto bone(BoneHandle handle) -> Bone& { return m_bones[handle.id]; }
+	[[nodiscard]] auto bone(BoneHandle handle) const -> const Bone& { return m_bones[handle.id]; }
+	[[nodiscard]] auto boneCount() const -> size_t { return m_bones.size(); }
+	[[nodiscard]] auto bones() const -> const std::vector<Bone>& { return m_bones; }
 
-	/// @brief Returns the root bone of the skeleton
-	Bone* rootBone() { return m_root; }
-	/// @brief Returns the last bone in the skeleton chain at the pivot
-	Bone* pivotBone() { return m_pivot; }
+	[[nodiscard]] auto computeBoneBasePosition(BoneHandle handle) -> Vector2;
+	[[nodiscard]] auto computePivotPosition() -> Vector2;
+	[[nodiscard]] auto computeJointPositions() -> std::vector<Vector2>;
 
-	/// @brief Returns the position at the base of bone
-	Vector2 boneBasePosition(Bone* bone);
-
-	/// @brief Returns the pivot position of the last bone
-	Vector2 pivotPosition();
-
-	/// @brief Returns the count of bones
-	size_t numOfBones() { return m_bones.size(); }
-
-	/// @brief Prints each bone of the skeleton with its angle and length to the console
-	void print();
+	void addBone(float length, float angle);
 
 private:
-	Bone* m_root = nullptr;
-	Bone* m_pivot = nullptr;
-	std::vector<std::unique_ptr<Bone>> m_bones;
+	std::vector<Bone> m_bones;
 };

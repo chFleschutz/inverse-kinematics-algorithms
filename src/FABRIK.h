@@ -9,59 +9,42 @@ public:
 	/// @brief Trys to set the end effector of the skeleton to the target position by rotating the bones of the skeleton
 	virtual bool solve(Skeleton& skeleton, const Vector2& targetPos, int maxIterations, float epsilon) override
 	{
-		auto boneCount = skeleton.numOfBones();
-		std::vector<Vector2> jointPos(boneCount + 1);
-
-		// Save positions of each joint in the skeleton
-		Bone* node = skeleton.rootBone();
-		for (size_t i = 1; i < boneCount + 1; i++)
-		{
-			jointPos[i] = jointPos[i - 1] + Vector2::makeVector(node->length, node->angle);
-			node = node->child;
-		}
-
+		std::vector<Vector2> jointPositions = skeleton.computeJointPositions();
 		for (int i = 0; i < maxIterations; i++)
 		{
-			// Forward Reaching Inverse Kinematik
-			node = skeleton.pivotBone();
-			jointPos[boneCount] = targetPos;
-			for (size_t j = boneCount - 1; j > 0; j--)
+			// Forward Reaching Inverse Kinematics
+			jointPositions.back() = targetPos;
+			for (size_t j = skeleton.boneCount() - 1; j > 0; j--)
 			{
-				// Vector from next joint to current joint
-				Vector2 vec = (jointPos[j] - jointPos[j + 1]).normalize();
-				jointPos[j] = jointPos[j + 1] + (vec * node->length);
-				node = node->parent;
+				float boneLength = skeleton.bone(BoneHandle{ j }).length;
+				Vector2 jointVec = (jointPositions[j + 1] - jointPositions[j]).normalize();
+				jointPositions[j] = jointPositions[j + 1] - (jointVec * boneLength);
 			}
 
-			// Backward Reaching Inverse Kinematik
-			node = skeleton.rootBone();
-			jointPos[0] = Vector2(0.0f, 0.0f);
-			for (size_t k = 1; k < boneCount - 1; k++)
+			// Backward Reaching Inverse Kinematics
+			jointPositions.front() = Vector2(0.0f, 0.0f);
+			for (size_t j = 1; j < skeleton.boneCount() - 1; j++)
 			{
-				// Vector from previous joint to current joint
-				Vector2 vec = (jointPos[k] - jointPos[k - 1]).normalize();
-				jointPos[k] = jointPos[k - 1] + (vec * node->length);
-				node = node->child;
+				float boneLength = skeleton.bone(BoneHandle{ j - 1 }).length;
+				Vector2 jointVec = (jointPositions[j] - jointPositions[j - 1]).normalize();
+				jointPositions[j] = jointPositions[j - 1] + (jointVec * boneLength);
 			}
 
-			// Adjust rotation of each bone in the skeleton based on the new joint positions
-			node = skeleton.rootBone();
+			// Update bone angles
 			Vector2 lastVec(1.0f, 0.0f);
-			for (size_t l = 1; l < boneCount + 1; l++)
+			for (size_t j = 0; j < skeleton.boneCount(); j++)
 			{
-				Vector2 vec = (jointPos[l] - jointPos[l - 1]).normalize();
-				node->angle = acos(lastVec.dot(vec));
-
+				Vector2 vec = (jointPositions[j + 1] - jointPositions[j]).normalize();
+				skeleton.bone(BoneHandle{ j }).angle = acos(lastVec.dot(vec));
 				lastVec = vec;
-				node = node->child;
 			}
 
 			// Return if Pivot is near enougth to the target
-			if ((targetPos - skeleton.pivotPosition()).length() < epsilon)
+			if ((targetPos - skeleton.computePivotPosition()).length() < epsilon)
 				return true;
 		}
 
-		// Algorithm finished by reaching maxIterations -> pivot is not near enough to the target
+		// Algorithm finished by reaching max Iterations -> pivot is not near enough to the target
 		return false;
 	}
 };
