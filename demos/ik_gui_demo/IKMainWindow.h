@@ -20,13 +20,25 @@ protected:
 	auto itemChange(GraphicsItemChange change, const QVariant& value) -> QVariant override;
 };
 
+class SkeletonItem : public QGraphicsItem
+{
+public:
+	SkeletonItem(QGraphicsItem* parent = nullptr);
+
+	auto boundingRect() const -> QRectF override;
+	void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
+
+private:
+	Skeleton m_skeleton;
+};
+
 
 class IKMainWindow : public QMainWindow
 {
 	Q_OBJECT
 
 public:
-	IKMainWindow(QWidget *parent = nullptr);
+	IKMainWindow(QWidget* parent = nullptr);
 	~IKMainWindow();
 
 public slots:
@@ -37,6 +49,6 @@ private:
 	Ui::IKMainWindowClass ui;
 
 	std::unique_ptr<IKSolver> m_ikSolver;
-	Skeleton m_skeleton;
+	SkeletonItem* m_skeletonItem = nullptr;
 	TargetItem* m_targetItem = nullptr;
 };

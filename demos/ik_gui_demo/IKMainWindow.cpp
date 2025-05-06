@@ -28,6 +28,40 @@ auto TargetItem::itemChange(GraphicsItemChange change, const QVariant& value) ->
 }
 
 
+
+
+SkeletonItem::SkeletonItem(QGraphicsItem* parent)
+	: QGraphicsItem(parent)
+{
+	m_skeleton.addBone(100.0f, radians(-30.0f));
+	m_skeleton.addBone(100.0f, radians(30.0f));
+}
+
+auto SkeletonItem::boundingRect() const -> QRectF
+{
+	return QRectF(-200, -200, 400, 400);
+}
+
+void SkeletonItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+{
+	painter->setRenderHint(QPainter::Antialiasing);
+	painter->setPen(QPen(Qt::blue, 3));
+
+	Bone* bone = m_skeleton.rootBone();
+	while (bone)
+	{
+		Vector2 basePos = m_skeleton.boneBasePosition(bone);
+		Vector2 endPos = basePos + Vector2::makeVector(bone->length, bone->angle);
+
+		painter->drawLine(QPointF(basePos.x(), basePos.y()), QPointF(endPos.x(), endPos.y()));
+		painter->drawEllipse(QPointF(endPos.x(), endPos.y()), 5, 5);
+
+		bone = bone->child;
+	}
+}
+
+
+
 IKMainWindow::IKMainWindow(QWidget *parent)
 	: QMainWindow(parent)
 {
@@ -38,14 +72,11 @@ IKMainWindow::IKMainWindow(QWidget *parent)
 	scene->setSceneRect(-200, -200, 400, 400);
 	ui.graphicsView->setScene(scene);
 
-	scene->addLine(-100, -100, 100, 100, QPen(Qt::blue, 3));
-	scene->addLine(0, 0, 100, 0, QPen(Qt::red, 3));
-
 	m_targetItem = new TargetItem(100, 0, 10);
 	scene->addItem(m_targetItem);
 
-	m_skeleton.addBone(100.0f, radians(30.0f));
-	m_skeleton.addBone(100.0f, radians(30.0f));
+	m_skeletonItem = new SkeletonItem();
+	scene->addItem(m_skeletonItem);
 }
 
 IKMainWindow::~IKMainWindow()
