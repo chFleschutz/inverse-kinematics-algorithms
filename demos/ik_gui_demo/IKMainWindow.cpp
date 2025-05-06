@@ -34,7 +34,9 @@ SkeletonItem::SkeletonItem(QGraphicsItem* parent)
 	: QGraphicsItem(parent)
 {
 	m_skeleton.addBone(100.0f, radians(-30.0f));
+	m_skeleton.addBone(150.0f, radians(30.0f));
 	m_skeleton.addBone(100.0f, radians(30.0f));
+	m_skeleton.addBone(50.0f, radians(30.0f));
 }
 
 auto SkeletonItem::boundingRect() const -> QRectF
@@ -47,16 +49,16 @@ void SkeletonItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
 	painter->setRenderHint(QPainter::Antialiasing);
 	painter->setPen(QPen(Qt::blue, 3));
 
-	Bone* bone = m_skeleton.rootBone();
-	while (bone)
+	// Draw the skeleton
+	Vector2 basePos;
+	float currentAngle = 0.0f;
+	for (const auto& bone : m_skeleton.bones())
 	{
-		Vector2 basePos = m_skeleton.boneBasePosition(bone);
-		Vector2 endPos = basePos + Vector2::makeVector(bone->length, bone->angle);
-
+		currentAngle += bone.angle;
+		Vector2 endPos = basePos + Vector2::makeVector(bone.length, currentAngle);
 		painter->drawLine(QPointF(basePos.x(), basePos.y()), QPointF(endPos.x(), endPos.y()));
-		painter->drawEllipse(QPointF(endPos.x(), endPos.y()), 5, 5);
-
-		bone = bone->child;
+		painter->drawEllipse(QPointF(basePos.x(), basePos.y()), 5, 5);
+		basePos = endPos;
 	}
 }
 
