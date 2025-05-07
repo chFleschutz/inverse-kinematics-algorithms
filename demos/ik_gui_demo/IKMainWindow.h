@@ -1,36 +1,28 @@
 #pragma once
 
-#include <QMainWindow>
 #include "ui_IKMainWindow.h"
 
 #include <IKSolver.h>
 #include <Skeleton.h>
 
 #include <QGraphicsEllipseItem>
+#include <QMainWindow>
 
 #include <memory>
 
 
-class TargetItem : public QGraphicsEllipseItem
+class TargetItem : public QObject, public QGraphicsEllipseItem
 {
+	Q_OBJECT
+
 public:
-	TargetItem(float x, float y, float radius, QGraphicsItem* parent = nullptr);
+	TargetItem(float radius, QGraphicsItem* parent = nullptr);
+
+signals:
+	void targetMoved(const QPointF& newPos);
 
 protected:
 	auto itemChange(GraphicsItemChange change, const QVariant& value) -> QVariant override;
-};
-
-
-class SkeletonItem : public QGraphicsItem
-{
-public:
-	SkeletonItem(QGraphicsItem* parent = nullptr);
-
-	auto boundingRect() const -> QRectF override;
-	void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
-
-private:
-	Skeleton m_skeleton;
 };
 
 
@@ -45,11 +37,18 @@ public:
 public slots:
 	void onCCDSelected();
 	void onFABRIKSelected();
+	void onTargetMoved(const QPointF& newPos);
 
 private:
+	void updateSkeleton();
+	
 	Ui::IKMainWindowClass ui;
 
 	std::unique_ptr<IKSolver> m_ikSolver;
-	SkeletonItem* m_skeletonItem = nullptr;
+	Skeleton m_skeleton;
+
+	QGraphicsScene* m_scene = nullptr;
+	std::vector<QGraphicsLineItem*> m_boneItems;
+	std::vector<QGraphicsEllipseItem*> m_jointItems;
 	TargetItem* m_targetItem = nullptr;
 };
