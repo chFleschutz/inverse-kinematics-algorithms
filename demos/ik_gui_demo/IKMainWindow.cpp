@@ -41,7 +41,23 @@ SkeletonItem::SkeletonItem(QGraphicsItem* parent)
 
 auto SkeletonItem::boundingRect() const -> QRectF
 {
-	return QRectF(-200, -200, 400, 400);
+	std::vector<Vector2> jointPositions = m_skeleton.computeJointPositions();
+
+	QRectF boundingRect(0, 0, 0, 0);
+	for (const auto& pos : jointPositions)
+	{
+		if (pos.x() < boundingRect.left())
+			boundingRect.setLeft(pos.x());
+		if (pos.x() > boundingRect.right())
+			boundingRect.setRight(pos.x());
+		if (pos.y() < boundingRect.top())
+			boundingRect.setTop(pos.y());
+		if (pos.y() > boundingRect.bottom())
+			boundingRect.setBottom(pos.y());
+	}
+
+	boundingRect.adjust(-10, -10, 10, 10); // Add some padding
+	return boundingRect;
 }
 
 void SkeletonItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -49,17 +65,19 @@ void SkeletonItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
 	painter->setRenderHint(QPainter::Antialiasing);
 	painter->setPen(QPen(Qt::blue, 3));
 
-	// Draw the skeleton
-	Vector2 basePos;
-	float currentAngle = 0.0f;
-	for (const auto& bone : m_skeleton.bones())
+	// Draw the bones
+	std::vector<Vector2> jointPositions = m_skeleton.computeJointPositions();
+	for (size_t i = 0; i < jointPositions.size() - 1; ++i)
 	{
-		currentAngle += bone.angle;
-		Vector2 endPos = basePos + Vector2::makeVector(bone.length, currentAngle);
-		painter->drawLine(QPointF(basePos.x(), basePos.y()), QPointF(endPos.x(), endPos.y()));
-		painter->drawEllipse(QPointF(basePos.x(), basePos.y()), 5, 5);
-		basePos = endPos;
+		QPoint start(jointPositions[i].x(), jointPositions[i].y());
+		QPoint end(jointPositions[i + 1].x(), jointPositions[i + 1].y());
+		painter->drawLine(start, end);
+		painter->drawEllipse(start, 5, 5);
 	}
+
+	// Draw the end effector
+	QPointF endPos(jointPositions.back().x(), jointPositions.back().y());
+	painter->drawEllipse(endPos, 5, 5); 
 }
 
 

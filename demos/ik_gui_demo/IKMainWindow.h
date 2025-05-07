@@ -20,6 +20,7 @@ protected:
 	auto itemChange(GraphicsItemChange change, const QVariant& value) -> QVariant override;
 };
 
+
 class SkeletonItem : public QGraphicsItem
 {
 public:
