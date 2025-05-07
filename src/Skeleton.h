@@ -38,9 +38,9 @@ public:
 	[[nodiscard]] auto boneCount() const -> size_t { return m_bones.size(); }
 	[[nodiscard]] auto bones() const -> const std::vector<Bone>& { return m_bones; }
 
-	[[nodiscard]] auto computeBoneBasePosition(BoneHandle handle) -> Vector2;
-	[[nodiscard]] auto computePivotPosition() -> Vector2;
-	[[nodiscard]] auto computeJointPositions() -> std::vector<Vector2>;
+	[[nodiscard]] auto computeBoneBasePosition(BoneHandle handle) const-> Vector2;
+	[[nodiscard]] auto computePivotPosition() const -> Vector2;
+	[[nodiscard]] auto computeJointPositions() const -> std::vector<Vector2>;
 
 	void addBone(float length, float angle);
 

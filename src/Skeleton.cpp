@@ -11,7 +11,7 @@ void Skeleton::addBone(float length, float angle)
 	m_bones.emplace_back(parent, BoneHandle{}, length, angle);
 }
 
-auto Skeleton::computeBoneBasePosition(BoneHandle handle) -> Vector2
+auto Skeleton::computeBoneBasePosition(BoneHandle handle) const -> Vector2
 {
 	Vector2 basePosition;
 	for (const auto& bone : m_bones)
@@ -24,7 +24,7 @@ auto Skeleton::computeBoneBasePosition(BoneHandle handle) -> Vector2
 	return basePosition;
 }
 
-auto Skeleton::computePivotPosition() -> Vector2
+auto Skeleton::computePivotPosition() const -> Vector2
 {
 	Vector2 pivotPos;
 	float currentAngle = 0.0f;
@@ -36,7 +36,7 @@ auto Skeleton::computePivotPosition() -> Vector2
 	return pivotPos;
 }
 
-auto Skeleton::computeJointPositions() -> std::vector<Vector2>
+auto Skeleton::computeJointPositions() const -> std::vector<Vector2>
 {
 	std::vector<Vector2> jointPositions;
 	jointPositions.reserve(m_bones.size() + 1);
