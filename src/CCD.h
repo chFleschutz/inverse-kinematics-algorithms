@@ -17,7 +17,7 @@ public:
 		{
 			// Adjust rotation of each bone in the skeleton
 			std::vector<Vector2> jointPositions = skeleton.computeJointPositions();
-			for (size_t i = jointPositions.size() - 1; i > 0; i--)
+			for (int32_t i = static_cast<int32_t>(jointPositions.size() - 1); i > 0; i--)
 			{
 				Vector2 pivotPos = jointPositions.back();
 				Vector2 currentBasePos = jointPositions[i - 1];
@@ -27,7 +27,7 @@ public:
 				float det = basePivotVec.cross(baseTargetVec);
 				float rotateAngle = atan2(det, dot);
 
-				skeleton.bone(BoneHandle{ i - 1 }).angle += rotateAngle;
+				skeleton.bone(i - 1).angle += rotateAngle;
 			}
 
 			// Return if pivot is near enought to the target -> success

@@ -2,23 +2,18 @@
 
 void Skeleton::addBone(float length, float angle)
 {
-	BoneHandle parent;
-	if (!m_bones.empty())
-	{
-		parent = BoneHandle{ static_cast<uint32_t>(m_bones.size() - 1) };
-	}
-
-	m_bones.emplace_back(parent, BoneHandle{}, length, angle);
+	int32_t parent = m_bones.empty() ? -1 : static_cast<int32_t>(m_bones.size() - 1);
+	m_bones.emplace_back(parent, length, angle);
 }
 
-auto Skeleton::computeBoneBasePosition(BoneHandle handle) const -> Vector2
+auto Skeleton::computeBoneBasePosition(int32_t index) const -> Vector2
 {
 	Vector2 basePosition;
 	for (const auto& bone : m_bones)
 	{
 		basePosition += Vector2::makeVector(bone.length, bone.angle);
 
-		if (bone.parent == handle)
+		if (bone.parent == index)
 			break;
 	}
 	return basePosition;

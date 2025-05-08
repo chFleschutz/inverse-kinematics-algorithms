@@ -5,23 +5,10 @@
 #include <vector>
 #include <limits>
 
-struct BoneHandle
-{
-	BoneHandle() = default;
-	BoneHandle(uint32_t id) : id(id) {}
-	BoneHandle(size_t id) : id(static_cast<uint32_t>(id)) {}
-
-	uint32_t id{ std::numeric_limits<uint32_t>::max() };
-
-	[[nodiscard]] auto operator==(const BoneHandle& other) const -> bool { return id == other.id; }
-	[[nodiscard]] auto operator!=(const BoneHandle& other) const -> bool { return id != other.id; }
-};
-
 /// @brief Represents a bone in a skeleton
 struct Bone
 {
-	BoneHandle parent;
-	BoneHandle child;
+	int32_t parent = -1; 
 	float length = 1.0f;
 	float angle = 0.0f;
 };
@@ -33,12 +20,12 @@ public:
 	Skeleton() = default;
 	~Skeleton() = default;
 
-	[[nodiscard]] auto bone(BoneHandle handle) -> Bone& { return m_bones[handle.id]; }
-	[[nodiscard]] auto bone(BoneHandle handle) const -> const Bone& { return m_bones[handle.id]; }
+	[[nodiscard]] auto bone(int32_t index) -> Bone& { return m_bones[index]; }
+	[[nodiscard]] auto bone(int32_t index) const -> const Bone& { return m_bones[index]; }
 	[[nodiscard]] auto boneCount() const -> size_t { return m_bones.size(); }
 	[[nodiscard]] auto bones() const -> const std::vector<Bone>& { return m_bones; }
 
-	[[nodiscard]] auto computeBoneBasePosition(BoneHandle handle) const-> Vector2;
+	[[nodiscard]] auto computeBoneBasePosition(int32_t index) const-> Vector2;
 	[[nodiscard]] auto computePivotPosition() const -> Vector2;
 	[[nodiscard]] auto computeJointPositions() const -> std::vector<Vector2>;
 
