@@ -13,6 +13,17 @@ public:
 	/// @brief Trys to set the end effector of the skeleton to the desired target position by rotating the bones of the skeleton
 	virtual bool solve(Skeleton& skeleton, const glm::vec2& targetPos, int maxIterations, float epsilon) override
 	{
+		// Check if the target is reachable
+		if (skeleton.maxReach() < glm::length(targetPos))
+		{
+			skeleton.bone(0).angle = atan2(targetPos.y, targetPos.x);
+			for (int32_t i = 1; i < static_cast<int32_t>(skeleton.boneCount()); i++)
+			{
+				skeleton.bone(i).angle = 0.0f;
+			}
+			return false;
+		}
+
 		for (int i = 0; i < maxIterations; i++)
 		{
 			// Adjust rotation of each bone in the skeleton

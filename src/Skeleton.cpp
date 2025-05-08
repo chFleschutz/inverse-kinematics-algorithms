@@ -9,6 +9,7 @@ void Skeleton::addBone(float length, float angle)
 {
 	int32_t parent = m_bones.empty() ? -1 : static_cast<int32_t>(m_bones.size() - 1);
 	m_bones.emplace_back(parent, length, angle);
+	m_maxReach += length;
 }
 
 auto Skeleton::computeBoneBasePosition(int32_t index) const -> glm::vec2

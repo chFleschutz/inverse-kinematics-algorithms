@@ -24,6 +24,7 @@ public:
 	[[nodiscard]] auto bone(int32_t index) const -> const Bone& { return m_bones[index]; }
 	[[nodiscard]] auto boneCount() const -> size_t { return m_bones.size(); }
 	[[nodiscard]] auto bones() const -> const std::vector<Bone>& { return m_bones; }
+	[[nodiscard]] auto maxReach() const -> float { return m_maxReach; }
 
 	[[nodiscard]] auto computeBoneBasePosition(int32_t index) const->glm::vec2;
 	[[nodiscard]] auto computePivotPosition() const -> glm::vec2;
@@ -33,4 +34,5 @@ public:
 
 private:
 	std::vector<Bone> m_bones;
+	float m_maxReach = 0.0f;
 };

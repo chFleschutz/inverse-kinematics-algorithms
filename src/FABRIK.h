@@ -9,6 +9,22 @@ public:
 	/// @brief Trys to set the end effector of the skeleton to the target position by rotating the bones of the skeleton
 	virtual bool solve(Skeleton& skeleton, const glm::vec2& targetPos, int maxIterations, float epsilon) override
 	{
+		if (skeleton.boneCount() < 2)
+		{
+			skeleton.bone(0).angle = atan2(targetPos.y, targetPos.x);
+			return false;
+		}
+
+		if (skeleton.maxReach() < glm::length(targetPos))
+		{
+			skeleton.bone(0).angle = atan2(targetPos.y, targetPos.x);
+			for (int32_t i = 1; i < static_cast<int32_t>(skeleton.boneCount()); i++)
+			{
+				skeleton.bone(i).angle = 0.0f;
+			}
+			return false;
+		}
+
 		std::vector<glm::vec2> jointPositions = skeleton.computeJointPositions();
 		for (int iter = 0; iter < maxIterations; iter++)
 		{
