@@ -36,11 +36,11 @@ public:
 
 			// Backward Reaching - adjust from the root
 			joints.front() = glm::vec2{ 0.0f };
-			for (int32_t i = 1; i < tipJointIndex; i++)
+			for (int32_t i = 1; i <= tipJointIndex; i++)
 			{
 				glm::vec2& currentJoint = joints[i];
 				const glm::vec2& prevJoint = joints[i - 1];
-				currentJoint = prevJoint + glm::normalize(currentJoint - prevJoint) * skeleton.bone(i).length;
+				currentJoint = prevJoint + glm::normalize(currentJoint - prevJoint) * skeleton.bone(i - 1).length;
 			}
 
 			// Break if close enough to the target
