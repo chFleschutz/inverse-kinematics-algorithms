@@ -55,4 +55,7 @@ private:
 	std::vector<QGraphicsLineItem*> m_boneItems;
 	std::vector<QGraphicsEllipseItem*> m_jointItems;
 	TargetItem* m_targetItem = nullptr;
+
+	QColor m_backgroundColor;
+	QColor m_foregroundColor;
 };

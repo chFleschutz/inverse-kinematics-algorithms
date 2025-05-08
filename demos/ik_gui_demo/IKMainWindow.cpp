@@ -10,8 +10,8 @@
 TargetItem::TargetItem(float radius, QGraphicsItem* parent)
 	: QGraphicsEllipseItem(-radius, -radius, radius * 2, radius * 2, parent)
 {
-	setBrush(Qt::NoBrush);
-	setPen(QPen(Qt::red, 2));
+	setBrush(Qt::red);
+	setPen(Qt::NoPen);
 	setFlags(ItemIsMovable | ItemSendsScenePositionChanges);
 }
 
@@ -36,7 +36,10 @@ IKMainWindow::IKMainWindow(QWidget *parent)
 	ui.graphicsView->setScene(m_scene);
 	ui.graphicsView->setRenderHint(QPainter::Antialiasing);
 
-	m_targetItem = new TargetItem(10);
+	m_backgroundColor = ui.graphicsView->palette().color(QPalette::Window);
+	m_foregroundColor = ui.graphicsView->palette().color(QPalette::WindowText);
+
+	m_targetItem = new TargetItem(9);
 	m_targetItem->setPos(100, -100);
 	m_targetItem->setZValue(1);
 	m_scene->addItem(m_targetItem);
@@ -95,7 +98,7 @@ void IKMainWindow::updateSkeleton()
 	while (m_boneItems.size() < m_skeleton.boneCount())
 	{
 		auto* boneItem = new QGraphicsLineItem();
-		boneItem->setPen(QPen(Qt::blue, 3));
+		boneItem->setPen(QPen(m_foregroundColor, 3));
 		boneItem->setZValue(-1);
 		m_boneItems.push_back(boneItem);
 		m_scene->addItem(boneItem);
@@ -105,8 +108,8 @@ void IKMainWindow::updateSkeleton()
 	while (m_jointItems.size() < m_skeleton.boneCount() + 1)
 	{
 		auto* jointItem = new QGraphicsEllipseItem();
-		jointItem->setBrush(Qt::white);
-		jointItem->setPen(QPen(Qt::blue, 2));
+		jointItem->setBrush(QBrush(m_backgroundColor));
+		jointItem->setPen(QPen(m_foregroundColor, 3));
 		m_jointItems.push_back(jointItem);
 		m_scene->addItem(jointItem);
 	}
@@ -118,8 +121,8 @@ void IKMainWindow::updateSkeleton()
 		QPoint end(jointPositions[i + 1].x, jointPositions[i + 1].y);
 
 		m_boneItems[i]->setLine(start.x(), start.y(), end.x(), end.y());
-		m_jointItems[i]->setRect(start.x() - 5, start.y() - 5, 10, 10);
+		m_jointItems[i]->setRect(start.x() - 10, start.y() - 10, 20, 20);
 	}
 
-	m_jointItems.back()->setRect(jointPositions.back().x - 5, jointPositions.back().y - 5, 10, 10);
+	m_jointItems.back()->setRect(jointPositions.back().x - 10, jointPositions.back().y - 10, 20, 20);
 }
