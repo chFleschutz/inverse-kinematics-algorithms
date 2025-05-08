@@ -40,7 +40,7 @@ public:
 			}
 
 			// Return if pivot is near enought to the target -> success
-			if ((targetPos - skeleton.computePivotPosition()).length() < epsilon)
+			if (glm::length(targetPos - skeleton.computePivotPosition()) < epsilon)
 				return true;
 		}
 
