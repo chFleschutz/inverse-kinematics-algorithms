@@ -19,7 +19,7 @@ auto TargetItem::itemChange(GraphicsItemChange change, const QVariant& value) ->
 {
 	if (change == ItemPositionChange)
 	{
-		emit targetMoved(value.toPointF());
+		emit targetMoved();
 	}
 
 	return QGraphicsEllipseItem::itemChange(change, value);
@@ -30,8 +30,6 @@ IKMainWindow::IKMainWindow(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
-	ui.CCD_radioButton->setChecked(true);
-	onCCDSelected();
 
 	m_scene = new QGraphicsScene(this);
 	m_scene->setSceneRect(-200, -200, 400, 400);
@@ -43,13 +41,15 @@ IKMainWindow::IKMainWindow(QWidget *parent)
 	m_targetItem->setZValue(1);
 	m_scene->addItem(m_targetItem);
 
-	connect(m_targetItem, &TargetItem::targetMoved, this, &IKMainWindow::onTargetMoved);
+	connect(m_targetItem, &TargetItem::targetMoved, this, &IKMainWindow::onUpdateIK);
 
 	m_skeleton.addBone(100.0f, glm::radians(-30.0f));
 	m_skeleton.addBone(100.0f, glm::radians(30.0f));
 	m_skeleton.addBone(100.0f, glm::radians(30.0f));
-
 	updateSkeleton();
+
+	ui.CCD_radioButton->setChecked(true);
+	onCCDSelected();
 }
 
 IKMainWindow::~IKMainWindow()
@@ -59,11 +59,13 @@ IKMainWindow::~IKMainWindow()
 void IKMainWindow::onCCDSelected()
 {
 	m_ikSolver = std::make_unique<CCD>();
+	onUpdateIK();
 }
 
 void IKMainWindow::onFABRIKSelected()
 {
 	m_ikSolver = std::make_unique<FABRIK>();
+	onUpdateIK();
 }
 
 void IKMainWindow::onIterationsChanged(int iterations)
@@ -76,13 +78,13 @@ void IKMainWindow::onEpsilonChanged(double epsilon)
 	m_epsilon = static_cast<float>(epsilon);
 }
 
-void IKMainWindow::onTargetMoved(const QPointF& newPos)
+void IKMainWindow::onUpdateIK()
 {
 	if (!m_ikSolver)
 		return;
 
-	glm::vec2 targetPos(newPos.x(), newPos.y());
-	bool result = m_ikSolver->solve(m_skeleton, targetPos, m_iterations, m_epsilon);
+	glm::vec2 targetPos{ m_targetItem->pos().x(), m_targetItem->pos().y() };
+	m_ikSolver->solve(m_skeleton, targetPos, m_iterations, m_epsilon);
 
 	updateSkeleton();
 }

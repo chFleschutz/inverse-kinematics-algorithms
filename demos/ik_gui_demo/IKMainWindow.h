@@ -19,7 +19,7 @@ public:
 	TargetItem(float radius, QGraphicsItem* parent = nullptr);
 
 signals:
-	void targetMoved(const QPointF& newPos);
+	void targetMoved();
 
 protected:
 	auto itemChange(GraphicsItemChange change, const QVariant& value) -> QVariant override;
@@ -39,7 +39,7 @@ public slots:
 	void onFABRIKSelected();
 	void onIterationsChanged(int iterations);
 	void onEpsilonChanged(double epsilon);
-	void onTargetMoved(const QPointF& newPos);
+	void onUpdateIK();
 
 private:
 	void updateSkeleton();
