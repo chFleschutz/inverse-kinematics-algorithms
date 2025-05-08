@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Vector2.h"
+#include <glm/glm.hpp>
 
 #include <vector>
 #include <limits>
@@ -25,9 +25,9 @@ public:
 	[[nodiscard]] auto boneCount() const -> size_t { return m_bones.size(); }
 	[[nodiscard]] auto bones() const -> const std::vector<Bone>& { return m_bones; }
 
-	[[nodiscard]] auto computeBoneBasePosition(int32_t index) const-> Vector2;
-	[[nodiscard]] auto computePivotPosition() const -> Vector2;
-	[[nodiscard]] auto computeJointPositions() const -> std::vector<Vector2>;
+	[[nodiscard]] auto computeBoneBasePosition(int32_t index) const->glm::vec2;
+	[[nodiscard]] auto computePivotPosition() const -> glm::vec2;
+	[[nodiscard]] auto computeJointPositions() const -> std::vector<glm::vec2>;
 
 	void addBone(float length, float angle);
 

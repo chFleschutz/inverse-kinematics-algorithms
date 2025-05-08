@@ -45,8 +45,9 @@ IKMainWindow::IKMainWindow(QWidget *parent)
 
 	connect(m_targetItem, &TargetItem::targetMoved, this, &IKMainWindow::onTargetMoved);
 
-	m_skeleton.addBone(100.0f, radians(-30.0f));
-	m_skeleton.addBone(100.0f, radians(30.0f));
+	m_skeleton.addBone(100.0f, glm::radians(-30.0f));
+	m_skeleton.addBone(100.0f, glm::radians(30.0f));
+	m_skeleton.addBone(100.0f, glm::radians(30.0f));
 
 	updateSkeleton();
 }
@@ -80,7 +81,7 @@ void IKMainWindow::onTargetMoved(const QPointF& newPos)
 	if (!m_ikSolver)
 		return;
 
-	Vector2 targetPos(newPos.x(), newPos.y());
+	glm::vec2 targetPos(newPos.x(), newPos.y());
 	bool result = m_ikSolver->solve(m_skeleton, targetPos, m_iterations, m_epsilon);
 
 	updateSkeleton();
@@ -108,15 +109,15 @@ void IKMainWindow::updateSkeleton()
 		m_scene->addItem(jointItem);
 	}
 
-	std::vector<Vector2> jointPositions = m_skeleton.computeJointPositions();
+	std::vector<glm::vec2> jointPositions = m_skeleton.computeJointPositions();
 	for (size_t i = 0; i < jointPositions.size() - 1; ++i)
 	{
-		QPoint start(jointPositions[i].x(), jointPositions[i].y());
-		QPoint end(jointPositions[i + 1].x(), jointPositions[i + 1].y());
+		QPoint start(jointPositions[i].x, jointPositions[i].y);
+		QPoint end(jointPositions[i + 1].x, jointPositions[i + 1].y);
 
 		m_boneItems[i]->setLine(start.x(), start.y(), end.x(), end.y());
 		m_jointItems[i]->setRect(start.x() - 5, start.y() - 5, 10, 10);
 	}
 
-	m_jointItems.back()->setRect(jointPositions.back().x() - 5, jointPositions.back().y() - 5, 10, 10);
+	m_jointItems.back()->setRect(jointPositions.back().x - 5, jointPositions.back().y - 5, 10, 10);
 }

@@ -7,14 +7,20 @@ option(BUILD_DEMOS "Build the demo projects" ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+add_subdirectory(external/glm)
+
 add_library(ik-algorithms STATIC 
 	"src/CCD.h"
 	"src/FABRIK.h"
 	"src/IKSolver.h"
 	"src/Skeleton.h"
 	"src/Skeleton.cpp"
-	"src/Vector2.h"
-	"src/Vector2.cpp"
+	
+	
+)
+
+target_link_libraries(ik-algorithms PUBLIC
+	glm
 )
 
 target_include_directories(ik-algorithms PUBLIC

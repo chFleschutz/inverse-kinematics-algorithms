@@ -1,17 +1,22 @@
 #include "Skeleton.h"
 
+auto polarToCartesian(float length, float angle) -> glm::vec2
+{
+	return glm::vec2{ length * std::cos(angle), length * std::sin(angle) };
+}
+
 void Skeleton::addBone(float length, float angle)
 {
 	int32_t parent = m_bones.empty() ? -1 : static_cast<int32_t>(m_bones.size() - 1);
 	m_bones.emplace_back(parent, length, angle);
 }
 
-auto Skeleton::computeBoneBasePosition(int32_t index) const -> Vector2
+auto Skeleton::computeBoneBasePosition(int32_t index) const -> glm::vec2
 {
-	Vector2 basePosition;
+	glm::vec2 basePosition{};
 	for (const auto& bone : m_bones)
 	{
-		basePosition += Vector2::makeVector(bone.length, bone.angle);
+		basePosition += polarToCartesian(bone.length, bone.angle);
 
 		if (bone.parent == index)
 			break;
@@ -19,29 +24,29 @@ auto Skeleton::computeBoneBasePosition(int32_t index) const -> Vector2
 	return basePosition;
 }
 
-auto Skeleton::computePivotPosition() const -> Vector2
+auto Skeleton::computePivotPosition() const -> glm::vec2
 {
-	Vector2 pivotPos;
+	glm::vec2 pivotPos{};
 	float currentAngle = 0.0f;
 	for (const auto& bone : m_bones)
 	{
 		currentAngle += bone.angle;
-		pivotPos += Vector2::makeVector(bone.length, currentAngle);
+		pivotPos += polarToCartesian(bone.length, currentAngle);
 	}
 	return pivotPos;
 }
 
-auto Skeleton::computeJointPositions() const -> std::vector<Vector2>
+auto Skeleton::computeJointPositions() const -> std::vector<glm::vec2>
 {
-	std::vector<Vector2> jointPositions;
+	std::vector<glm::vec2> jointPositions;
 	jointPositions.reserve(m_bones.size() + 1);
 	jointPositions.emplace_back(0.0f, 0.0f); // Add the root position
 	float currentAngle = 0.0f;
 	for (const auto& bone : m_bones)
 	{
 		currentAngle += bone.angle;
-		Vector2 basePos = jointPositions.back();
-		Vector2 endPos = basePos + Vector2::makeVector(bone.length, currentAngle);
+		glm::vec2 basePos = jointPositions.back();
+		glm::vec2 endPos = basePos + polarToCartesian(bone.length, currentAngle);
 		jointPositions.emplace_back(endPos);
 	}
 	return jointPositions;

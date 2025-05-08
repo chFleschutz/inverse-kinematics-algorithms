@@ -11,20 +11,20 @@ class CCD : public IKSolver
 {
 public:
 	/// @brief Trys to set the end effector of the skeleton to the desired target position by rotating the bones of the skeleton
-	virtual bool solve(Skeleton& skeleton, const Vector2& targetPos, int maxIterations, float epsilon) override
+	virtual bool solve(Skeleton& skeleton, const glm::vec2& targetPos, int maxIterations, float epsilon) override
 	{
 		for (int i = 0; i < maxIterations; i++)
 		{
 			// Adjust rotation of each bone in the skeleton
-			std::vector<Vector2> jointPositions = skeleton.computeJointPositions();
+			std::vector<glm::vec2> jointPositions = skeleton.computeJointPositions();
 			for (int32_t i = static_cast<int32_t>(jointPositions.size() - 1); i > 0; i--)
 			{
-				Vector2 pivotPos = jointPositions.back();
-				Vector2 currentBasePos = jointPositions[i - 1];
-				Vector2 basePivotVec = (pivotPos - currentBasePos).normalize();
-				Vector2 baseTargetVec = (targetPos - currentBasePos).normalize();
-				float dot = basePivotVec.dot(baseTargetVec);
-				float det = basePivotVec.cross(baseTargetVec);
+				glm::vec2 pivotPos = jointPositions.back();
+				glm::vec2 currentBasePos = jointPositions[i - 1];
+				glm::vec2 basePivotVec = glm::normalize(pivotPos - currentBasePos);
+				glm::vec2 baseTargetVec = glm::normalize(targetPos - currentBasePos);
+				float dot = glm::dot(basePivotVec, baseTargetVec);
+				float det = basePivotVec.x * baseTargetVec.y - basePivotVec.y * baseTargetVec.x;
 				float rotateAngle = atan2(det, dot);
 
 				skeleton.bone(i - 1).angle += rotateAngle;
