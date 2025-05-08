@@ -25,7 +25,7 @@
       </property>
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="3" column="1">
-        <widget class="QSpinBox" name="spinBox">
+        <widget class="QSpinBox" name="maxIteration_spinBox">
          <property name="maximum">
           <number>999</number>
          </property>
@@ -35,7 +35,7 @@
         </widget>
        </item>
        <item row="3" column="0">
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="maxIteration_label">
          <property name="text">
           <string>Max Iterations</string>
          </property>
@@ -56,12 +56,15 @@
         </widget>
        </item>
        <item row="4" column="1">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox">
+        <widget class="QDoubleSpinBox" name="targetDeviation_doubleSpinBox">
+         <property name="decimals">
+          <number>1</number>
+         </property>
          <property name="maximum">
-          <double>9.990000000000000</double>
+          <double>100.000000000000000</double>
          </property>
          <property name="singleStep">
-          <double>0.010000000000000</double>
+          <double>0.100000000000000</double>
          </property>
          <property name="value">
           <double>0.100000000000000</double>
@@ -69,7 +72,7 @@
         </widget>
        </item>
        <item row="4" column="0">
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="targetDeviation_label">
          <property name="text">
           <string>Target Deviation</string>
          </property>
@@ -141,7 +144,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>spinBox</sender>
+   <sender>maxIteration_spinBox</sender>
    <signal>valueChanged(int)</signal>
    <receiver>IKMainWindowClass</receiver>
    <slot>onIterationsChanged(int)</slot>
@@ -157,7 +160,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>doubleSpinBox</sender>
+   <sender>targetDeviation_doubleSpinBox</sender>
    <signal>valueChanged(double)</signal>
    <receiver>IKMainWindowClass</receiver>
    <slot>onEpsilonChanged(double)</slot>

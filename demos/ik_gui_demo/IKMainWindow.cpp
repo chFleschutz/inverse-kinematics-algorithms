@@ -40,13 +40,13 @@ IKMainWindow::IKMainWindow(QWidget *parent)
 	m_foregroundColor = ui.graphicsView->palette().color(QPalette::WindowText);
 
 	m_targetItem = new TargetItem(9);
-	m_targetItem->setPos(100, -100);
+	m_targetItem->setPos(300, -10);
 	m_targetItem->setZValue(1);
 	m_scene->addItem(m_targetItem);
 
 	connect(m_targetItem, &TargetItem::targetMoved, this, &IKMainWindow::onUpdateIK);
 
-	m_skeleton.addBone(100.0f, glm::radians(-30.0f));
+	m_skeleton.addBone(150.0f, glm::radians(-30.0f));
 	m_skeleton.addBone(100.0f, glm::radians(30.0f));
 	m_skeleton.addBone(100.0f, glm::radians(30.0f));
 	updateSkeleton();
