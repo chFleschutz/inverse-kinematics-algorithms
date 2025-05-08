@@ -9,12 +9,7 @@ public:
 	/// @brief Trys to set the end effector of the skeleton to the target position by rotating the bones of the skeleton
 	virtual bool solve(Skeleton& skeleton, const glm::vec2& targetPos, int maxIterations, float epsilon) override
 	{
-		if (skeleton.boneCount() < 2)
-		{
-			skeleton.bone(0).angle = atan2(targetPos.y, targetPos.x);
-			return false;
-		}
-
+		// Check if the target is reachable
 		if (skeleton.maxReach() < glm::length(targetPos))
 		{
 			skeleton.bone(0).angle = atan2(targetPos.y, targetPos.x);
@@ -25,42 +20,46 @@ public:
 			return false;
 		}
 
-		std::vector<glm::vec2> jointPositions = skeleton.computeJointPositions();
+		std::vector<glm::vec2> joints = skeleton.computeJointPositions();
+		int32_t tipJointIndex = static_cast<int32_t>(joints.size() - 1);
+		bool targetReached = false;
 		for (int iter = 0; iter < maxIterations; iter++)
 		{
-			// Forward Reaching Inverse Kinematics
-			jointPositions.back() = targetPos;
-			for (int32_t i = static_cast<int32_t>(skeleton.boneCount() - 1); i > 0; i--)
+			// Forward Reaching - adjust from the end effector
+			joints.back() = targetPos;
+			for (int32_t i = tipJointIndex - 1; i > 0; i--)
 			{
-				float boneLength = skeleton.bone(i).length;
-				glm::vec2 jointVec = glm::normalize(jointPositions[i + 1] - jointPositions[i]);
-				jointPositions[i] = jointPositions[i + 1] - (jointVec * boneLength);
+				glm::vec2& currentJoint = joints[i];
+				const glm::vec2& nextJoint = joints[i + 1];
+				currentJoint = nextJoint + glm::normalize(currentJoint - nextJoint) * skeleton.bone(i).length;
 			}
 
-			// Backward Reaching Inverse Kinematics
-			jointPositions.front() = glm::vec2{ 0.0f };
-			for (int32_t i = 1; i < static_cast<int32_t>(skeleton.boneCount() - 1); i++)
+			// Backward Reaching - adjust from the root
+			joints.front() = glm::vec2{ 0.0f };
+			for (int32_t i = 1; i < tipJointIndex; i++)
 			{
-				float boneLength = skeleton.bone(i - 1).length;
-				glm::vec2 jointVec = glm::normalize(jointPositions[i] - jointPositions[i - 1]);
-				jointPositions[i] = jointPositions[i - 1] + (jointVec * boneLength);
+				glm::vec2& currentJoint = joints[i];
+				const glm::vec2& prevJoint = joints[i - 1];
+				currentJoint = prevJoint + glm::normalize(currentJoint - prevJoint) * skeleton.bone(i).length;
 			}
 
-			// Update bone angles
-			glm::vec2 lastVec{ 1.0f, 0.0f };
-			for (int32_t i = 0; i < static_cast<int32_t>(skeleton.boneCount()); i++)
+			// Break if close enough to the target
+			if (glm::length(joints.back() - targetPos) < epsilon)
 			{
-				glm::vec2 vec = glm::normalize(jointPositions[i + 1] - jointPositions[i]);
-				skeleton.bone(i).angle = acos(glm::dot(lastVec, vec));
-				lastVec = vec;
+				targetReached = true;
+				break;
 			}
-
-			// Return if Pivot is near enougth to the target
-			if ((targetPos - skeleton.computePivotPosition()).length() < epsilon)
-				return true;
 		}
 
-		// Algorithm finished by reaching max Iterations -> pivot is not near enough to the target
-		return false;
+		// Update bone angles
+		glm::vec2 lastVec{ 1.0f, 0.0f };
+		for (int32_t i = 0; i < static_cast<int32_t>(skeleton.boneCount()); i++)
+		{
+			glm::vec2 vec = glm::normalize(joints[i + 1] - joints[i]);
+			skeleton.bone(i).angle = atan2(vec.y, vec.x) - atan2(lastVec.y, lastVec.x);
+			lastVec = vec;
+		}
+
+		return targetReached;
 	}
 };
