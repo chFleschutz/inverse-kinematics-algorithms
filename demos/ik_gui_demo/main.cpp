@@ -5,10 +5,11 @@
 int main(int argc, char** argv)
 {
 	QApplication app(argc, argv);
+	app.setWindowIcon(QIcon(":/images/appicon.ico"));
 
 	IKMainWindow mainWindow;
 	mainWindow.resize(1200, 800);
-	mainWindow.setWindowTitle("IK GUI Demo");
+	mainWindow.setWindowTitle("Inverse Kinematics");
 	mainWindow.show();
 
 	return app.exec();

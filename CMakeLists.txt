@@ -15,8 +15,6 @@ add_library(ik-algorithms STATIC
 	"src/IKSolver.h"
 	"src/Skeleton.h"
 	"src/Skeleton.cpp"
-	
-	
 )
 
 target_link_libraries(ik-algorithms PUBLIC
