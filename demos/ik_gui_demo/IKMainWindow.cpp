@@ -31,6 +31,7 @@ IKMainWindow::IKMainWindow(QWidget *parent)
 {
 	ui.setupUi(this);
 	ui.CCD_radioButton->setChecked(true);
+	onCCDSelected();
 
 	m_scene = new QGraphicsScene(this);
 	m_scene->setSceneRect(-200, -200, 400, 400);
@@ -38,6 +39,8 @@ IKMainWindow::IKMainWindow(QWidget *parent)
 	ui.graphicsView->setRenderHint(QPainter::Antialiasing);
 
 	m_targetItem = new TargetItem(10);
+	m_targetItem->setPos(100, -100);
+	m_targetItem->setZValue(1);
 	m_scene->addItem(m_targetItem);
 
 	connect(m_targetItem, &TargetItem::targetMoved, this, &IKMainWindow::onTargetMoved);
@@ -62,13 +65,23 @@ void IKMainWindow::onFABRIKSelected()
 	m_ikSolver = std::make_unique<FABRIK>();
 }
 
+void IKMainWindow::onIterationsChanged(int iterations)
+{
+	m_iterations = iterations;
+}
+
+void IKMainWindow::onEpsilonChanged(double epsilon)
+{
+	m_epsilon = static_cast<float>(epsilon);
+}
+
 void IKMainWindow::onTargetMoved(const QPointF& newPos)
 {
 	if (!m_ikSolver)
 		return;
 
 	Vector2 targetPos(newPos.x(), newPos.y());
-	bool result = m_ikSolver->solve(m_skeleton, targetPos, 100, 0.1f);
+	bool result = m_ikSolver->solve(m_skeleton, targetPos, m_iterations, m_epsilon);
 
 	updateSkeleton();
 }
