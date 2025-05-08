@@ -24,21 +24,19 @@ public:
 			return false;
 		}
 
-		for (int i = 0; i < maxIterations; i++)
+		for (int32_t i = 0; i < maxIterations; i++)
 		{
 			// Adjust rotation of each bone in the skeleton
-			std::vector<glm::vec2> jointPositions = skeleton.computeJointPositions();
-			for (int32_t i = static_cast<int32_t>(jointPositions.size() - 1); i > 0; i--)
+			for (int32_t i = static_cast<int32_t>(skeleton.boneCount()); i > 0; i--)
 			{
-				glm::vec2 pivotPos = jointPositions.back();
-				glm::vec2 currentBasePos = jointPositions[i - 1];
+				std::vector<glm::vec2> joints = skeleton.computeJointPositions();
+				glm::vec2 pivotPos = joints.back();
+				glm::vec2 currentBasePos = joints[i - 1];
 				glm::vec2 basePivotVec = glm::normalize(pivotPos - currentBasePos);
 				glm::vec2 baseTargetVec = glm::normalize(targetPos - currentBasePos);
 				float dot = glm::dot(basePivotVec, baseTargetVec);
 				float det = basePivotVec.x * baseTargetVec.y - basePivotVec.y * baseTargetVec.x;
-				float rotateAngle = atan2(det, dot);
-
-				skeleton.bone(i - 1).angle += rotateAngle;
+				skeleton.bone(i - 1).angle += atan2(det, dot);;
 			}
 
 			// Return if pivot is near enought to the target -> success
