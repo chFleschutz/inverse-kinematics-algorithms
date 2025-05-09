@@ -1,66 +1,54 @@
 #include "Skeleton.h"
 
-#include <iomanip>
-#include <iostream>
-#include <numbers>
-
-Skeleton& Skeleton::addBone(float length, float angle)
+auto polarToCartesian(float length, float angle) -> glm::vec2
 {
-	m_bones.emplace_back(std::make_unique<Bone>(m_pivot, nullptr, length, angle));
-	auto bone = m_bones.back().get();
-	if (m_root == nullptr)
-	{
-		m_root = bone;
-		m_pivot = bone;
-	}
-	else
-	{
-		m_pivot->child = bone;
-		m_pivot = bone;
-	}
-
-	return *this;
+	return glm::vec2{ length * std::cos(angle), length * std::sin(angle) };
 }
 
-Vector2 Skeleton::boneBasePosition(Bone* node)
+void Skeleton::addBone(float length, float angle)
 {
-	auto currentBone = m_root;
-	float currentAngle = 0.0f;
-	Vector2 basePosition{};
-	while (currentBone != node && currentBone != nullptr)
+	int32_t parent = m_bones.empty() ? -1 : static_cast<int32_t>(m_bones.size() - 1);
+	m_bones.emplace_back(parent, length, angle);
+	m_maxReach += length;
+}
+
+auto Skeleton::computeBoneBasePosition(int32_t index) const -> glm::vec2
+{
+	glm::vec2 basePosition{};
+	for (const auto& bone : m_bones)
 	{
-		currentAngle += currentBone->angle;
-		basePosition += Vector2::makeVector(currentBone->length, currentAngle);
-		currentBone = currentBone->child;
+		basePosition += polarToCartesian(bone.length, bone.angle);
+
+		if (bone.parent == index)
+			break;
 	}
 	return basePosition;
 }
 
-Vector2 Skeleton::pivotPosition()
+auto Skeleton::computePivotPosition() const -> glm::vec2
 {
-	auto currentBone = m_root;
+	glm::vec2 pivotPos{};
 	float currentAngle = 0.0f;
-	Vector2 pivotPos{};
-	while (currentBone != nullptr)
+	for (const auto& bone : m_bones)
 	{
-		currentAngle += currentBone->angle;
-		pivotPos += Vector2::makeVector(currentBone->length, currentAngle);
-		currentBone = currentBone->child;
+		currentAngle += bone.angle;
+		pivotPos += polarToCartesian(bone.length, currentAngle);
 	}
 	return pivotPos;
 }
 
-void Skeleton::print()
+auto Skeleton::computeJointPositions() const -> std::vector<glm::vec2>
 {
-	int indentation = 10;
-	auto bone = m_root;
-	while (bone != nullptr)
+	std::vector<glm::vec2> jointPositions;
+	jointPositions.reserve(m_bones.size() + 1);
+	jointPositions.emplace_back(0.0f, 0.0f); // Add the root position
+	float currentAngle = 0.0f;
+	for (const auto& bone : m_bones)
 	{
-		std::cout << std::setprecision(3) << std::fixed 
-			<< "\tangle:  " << degrees(bone->angle) << ", length: " << bone->length << "\n";
-
-		bone = bone->child;
-		indentation += 5;
+		currentAngle += bone.angle;
+		glm::vec2 basePos = jointPositions.back();
+		glm::vec2 endPos = basePos + polarToCartesian(bone.length, currentAngle);
+		jointPositions.emplace_back(endPos);
 	}
-	std::cout << std::endl;
+	return jointPositions;
 }

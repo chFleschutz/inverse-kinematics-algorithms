@@ -1,15 +1,14 @@
 #pragma once
 
-#include "Vector2.h"
+#include <glm/glm.hpp>
 
 #include <vector>
-
+#include <limits>
 
 /// @brief Represents a bone in a skeleton
 struct Bone
 {
-	Bone* parent = nullptr;
-	Bone* child = nullptr;
+	int32_t parent = -1; 
 	float length = 1.0f;
 	float angle = 0.0f;
 };
@@ -21,28 +20,19 @@ public:
 	Skeleton() = default;
 	~Skeleton() = default;
 
-	/// @brief Adds a bone at the end of the skeleton chain
-	Skeleton& addBone(float length, float angle);
+	[[nodiscard]] auto bone(int32_t index) -> Bone& { return m_bones[index]; }
+	[[nodiscard]] auto bone(int32_t index) const -> const Bone& { return m_bones[index]; }
+	[[nodiscard]] auto boneCount() const -> size_t { return m_bones.size(); }
+	[[nodiscard]] auto bones() const -> const std::vector<Bone>& { return m_bones; }
+	[[nodiscard]] auto maxReach() const -> float { return m_maxReach; }
 
-	/// @brief Returns the root bone of the skeleton
-	Bone* rootBone() { return m_root; }
-	/// @brief Returns the last bone in the skeleton chain at the pivot
-	Bone* pivotBone() { return m_pivot; }
+	[[nodiscard]] auto computeBoneBasePosition(int32_t index) const->glm::vec2;
+	[[nodiscard]] auto computePivotPosition() const -> glm::vec2;
+	[[nodiscard]] auto computeJointPositions() const -> std::vector<glm::vec2>;
 
-	/// @brief Returns the position at the base of bone
-	Vector2 boneBasePosition(Bone* bone);
-
-	/// @brief Returns the pivot position of the last bone
-	Vector2 pivotPosition();
-
-	/// @brief Returns the count of bones
-	size_t numOfBones() { return m_bones.size(); }
-
-	/// @brief Prints each bone of the skeleton with its angle and length to the console
-	void print();
+	void addBone(float length, float angle);
 
 private:
-	Bone* m_root = nullptr;
-	Bone* m_pivot = nullptr;
-	std::vector<std::unique_ptr<Bone>> m_bones;
+	std::vector<Bone> m_bones;
+	float m_maxReach = 0.0f;
 };

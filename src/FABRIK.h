@@ -7,61 +7,59 @@ class FABRIK : public IKSolver
 {
 public:
 	/// @brief Trys to set the end effector of the skeleton to the target position by rotating the bones of the skeleton
-	virtual bool solve(Skeleton& skeleton, const Vector2& targetPos, int maxIterations, float epsilon) override
+	virtual bool solve(Skeleton& skeleton, const glm::vec2& targetPos, int maxIterations, float epsilon) override
 	{
-		auto boneCount = skeleton.numOfBones();
-		std::vector<Vector2> jointPos(boneCount + 1);
-
-		// Save positions of each joint in the skeleton
-		Bone* node = skeleton.rootBone();
-		for (size_t i = 1; i < boneCount + 1; i++)
+		// Check if the target is reachable
+		if (skeleton.maxReach() < glm::length(targetPos))
 		{
-			jointPos[i] = jointPos[i - 1] + Vector2::makeVector(node->length, node->angle);
-			node = node->child;
+			skeleton.bone(0).angle = atan2(targetPos.y, targetPos.x);
+			for (int32_t i = 1; i < static_cast<int32_t>(skeleton.boneCount()); i++)
+			{
+				skeleton.bone(i).angle = 0.0f;
+			}
+			return false;
 		}
 
-		for (int i = 0; i < maxIterations; i++)
+		std::vector<glm::vec2> joints = skeleton.computeJointPositions();
+		int32_t tipJointIndex = static_cast<int32_t>(joints.size() - 1);
+		bool targetReached = false;
+		for (int iter = 0; iter < maxIterations; iter++)
 		{
-			// Forward Reaching Inverse Kinematik
-			node = skeleton.pivotBone();
-			jointPos[boneCount] = targetPos;
-			for (size_t j = boneCount - 1; j > 0; j--)
+			// Forward Reaching - adjust from the end effector
+			joints.back() = targetPos;
+			for (int32_t i = tipJointIndex - 1; i > 0; i--)
 			{
-				// Vector from next joint to current joint
-				Vector2 vec = (jointPos[j] - jointPos[j + 1]).normalize();
-				jointPos[j] = jointPos[j + 1] + (vec * node->length);
-				node = node->parent;
+				glm::vec2& currentJoint = joints[i];
+				const glm::vec2& nextJoint = joints[i + 1];
+				currentJoint = nextJoint + glm::normalize(currentJoint - nextJoint) * skeleton.bone(i).length;
 			}
 
-			// Backward Reaching Inverse Kinematik
-			node = skeleton.rootBone();
-			jointPos[0] = Vector2(0.0f, 0.0f);
-			for (size_t k = 1; k < boneCount - 1; k++)
+			// Backward Reaching - adjust from the root
+			joints.front() = glm::vec2{ 0.0f };
+			for (int32_t i = 1; i <= tipJointIndex; i++)
 			{
-				// Vector from previous joint to current joint
-				Vector2 vec = (jointPos[k] - jointPos[k - 1]).normalize();
-				jointPos[k] = jointPos[k - 1] + (vec * node->length);
-				node = node->child;
+				glm::vec2& currentJoint = joints[i];
+				const glm::vec2& prevJoint = joints[i - 1];
+				currentJoint = prevJoint + glm::normalize(currentJoint - prevJoint) * skeleton.bone(i - 1).length;
 			}
 
-			// Adjust rotation of each bone in the skeleton based on the new joint positions
-			node = skeleton.rootBone();
-			Vector2 lastVec(1.0f, 0.0f);
-			for (size_t l = 1; l < boneCount + 1; l++)
+			// Break if close enough to the target
+			if (glm::length(joints.back() - targetPos) < epsilon)
 			{
-				Vector2 vec = (jointPos[l] - jointPos[l - 1]).normalize();
-				node->angle = acos(lastVec.dot(vec));
-
-				lastVec = vec;
-				node = node->child;
+				targetReached = true;
+				break;
 			}
-
-			// Return if Pivot is near enougth to the target
-			if ((targetPos - skeleton.pivotPosition()).length() < epsilon)
-				return true;
 		}
 
-		// Algorithm finished by reaching maxIterations -> pivot is not near enough to the target
-		return false;
+		// Update bone angles
+		glm::vec2 lastVec{ 1.0f, 0.0f };
+		for (int32_t i = 0; i < static_cast<int32_t>(skeleton.boneCount()); i++)
+		{
+			glm::vec2 vec = glm::normalize(joints[i + 1] - joints[i]);
+			skeleton.bone(i).angle = atan2(vec.y, vec.x) - atan2(lastVec.y, lastVec.x);
+			lastVec = vec;
+		}
+
+		return targetReached;
 	}
 };
