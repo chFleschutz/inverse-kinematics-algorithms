@@ -1,5 +1,10 @@
 # Inverse Kinematics Algorithms: CCD and FABRIK
 
+![C++](https://img.shields.io/badge/language-C++20-blue.svg)
+![CMake](https://img.shields.io/badge/build-CMake-informational)
+![Qt](https://img.shields.io/badge/GUI-Qt%206.9-41CD52)
+![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)
+
 This repository showcases the implementation of two popular Inverse Kinematics (IK) algorithms: **Cyclic Coordinate Descent (CCD)** and **Forward and Backward Reaching Inverse Kinematics (FABRIK)**. These algorithms are commonly used in robotics, computer graphics and animation to solve the problem of positioning an end-effector for a skeleton (such as a robotic arm or a character's foot) at a desired location by manipulating its joint angles.
 
 ![grafik](https://github.com/user-attachments/assets/3787015e-c027-4bbd-af04-154a3cf6b97c)
