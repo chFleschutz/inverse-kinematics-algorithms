@@ -89,4 +89,4 @@ solver.solve(skeleton, target, maxIterations, precision);
 
 > Note: This project uses [GLM](https://github.com/g-truc/glm) for vector math (`glm::vec2`).
 
-Check the [demo](demo/) folder for example usages of the CCD and FABRIK algorithms.
+Check the [demos](demos/) folder for example usages of the CCD and FABRIK algorithms.
